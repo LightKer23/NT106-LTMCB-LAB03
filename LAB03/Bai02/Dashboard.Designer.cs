@@ -28,12 +28,48 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            btnServer = new Button();
+            btnClient = new Button();
+            SuspendLayout();
+            // 
+            // btnServer
+            // 
+            btnServer.Font = new Font("Tahoma", 10.2F);
+            btnServer.Location = new Point(215, 40);
+            btnServer.Name = "btnServer";
+            btnServer.Size = new Size(120, 40);
+            btnServer.TabIndex = 3;
+            btnServer.Text = "Server";
+            btnServer.UseVisualStyleBackColor = true;
+            // 
+            // btnClient
+            // 
+            btnClient.FlatAppearance.BorderColor = Color.White;
+            btnClient.Font = new Font("Tahoma", 10.2F);
+            btnClient.Location = new Point(45, 40);
+            btnClient.Name = "btnClient";
+            btnClient.Size = new Size(120, 40);
+            btnClient.TabIndex = 2;
+            btnClient.Text = "Client";
+            btnClient.UseVisualStyleBackColor = true;
+            // 
+            // Dashboard
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(382, 123);
+            Controls.Add(btnServer);
+            Controls.Add(btnClient);
+            Name = "Dashboard";
+            ShowIcon = false;
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Bài 02";
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private Button btnServer;
+        private Button btnClient;
     }
 }
