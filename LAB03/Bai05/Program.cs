@@ -11,17 +11,8 @@ namespace Bai05
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            DialogResult result = MessageBox.Show(
-               "Select Yes to run the Server\nSelect No to run the Client",
-               "Choose the running mode",
-               MessageBoxButtons.YesNo,
-               MessageBoxIcon.Question
-           );
-
-            if (result == DialogResult.Yes)
-                Application.Run(new Server());
-            else
-                Application.Run(new Client());
+            ApplicationConfiguration.Initialize();
+            Application.Run(new Dashboard());
         }
     }
 }

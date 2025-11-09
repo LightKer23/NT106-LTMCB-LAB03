@@ -41,6 +41,7 @@
             btnServer.TabIndex = 7;
             btnServer.Text = "Server";
             btnServer.UseVisualStyleBackColor = true;
+            btnServer.Click += btnServer_Click;
             // 
             // btnClient
             // 
@@ -52,6 +53,7 @@
             btnClient.TabIndex = 6;
             btnClient.Text = "Client";
             btnClient.UseVisualStyleBackColor = true;
+            btnClient.Click += btnClient_Click;
             // 
             // Dashboard
             // 

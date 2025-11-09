@@ -6,5 +6,17 @@ namespace Bai05
         {
             InitializeComponent();
         }
+
+        private void btnClient_Click(object sender, EventArgs e)
+        {
+            Client cl = new Client();
+            cl.Show();
+        }
+
+        private void btnServer_Click(object sender, EventArgs e)
+        {
+            Server sv = new Server();
+            sv.Show();
+        }
     }
 }
