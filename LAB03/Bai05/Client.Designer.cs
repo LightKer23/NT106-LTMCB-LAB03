@@ -33,13 +33,14 @@
             lblPort = new Label();
             txtPort = new TextBox();
             btnConnect = new Button();
-            button2 = new Button();
+            btnFind = new Button();
             lblResult = new Label();
             btnExit = new Button();
+            SuspendLayout();
             // 
             // txtServerIP
             // 
-            txtServerIP.Location = new Point(157, 41);
+            txtServerIP.Location = new Point(188, 45);
             txtServerIP.Name = "txtServerIP";
             txtServerIP.Size = new Size(125, 27);
             txtServerIP.TabIndex = 0;
@@ -47,7 +48,7 @@
             // lblServerIP
             // 
             lblServerIP.AutoSize = true;
-            lblServerIP.Location = new Point(44, 44);
+            lblServerIP.Location = new Point(75, 48);
             lblServerIP.Name = "lblServerIP";
             lblServerIP.Size = new Size(66, 20);
             lblServerIP.TabIndex = 1;
@@ -56,7 +57,7 @@
             // lblPort
             // 
             lblPort.AutoSize = true;
-            lblPort.Location = new Point(44, 93);
+            lblPort.Location = new Point(75, 98);
             lblPort.Name = "lblPort";
             lblPort.Size = new Size(35, 20);
             lblPort.TabIndex = 2;
@@ -64,14 +65,14 @@
             // 
             // txtPort
             // 
-            txtPort.Location = new Point(157, 90);
+            txtPort.Location = new Point(188, 95);
             txtPort.Name = "txtPort";
             txtPort.Size = new Size(125, 27);
             txtPort.TabIndex = 3;
             // 
             // btnConnect
             // 
-            btnConnect.Location = new Point(403, 40);
+            btnConnect.Location = new Point(434, 44);
             btnConnect.Name = "btnConnect";
             btnConnect.Size = new Size(94, 29);
             btnConnect.TabIndex = 4;
@@ -79,28 +80,28 @@
             btnConnect.UseVisualStyleBackColor = true;
             btnConnect.Click += btnConnect_Click;
             // 
-            // button2
+            // btnFind
             // 
-            button2.Location = new Point(403, 89);
-            button2.Name = "button2";
-            button2.Size = new Size(167, 29);
-            button2.TabIndex = 5;
-            button2.Text = "Tìm món ăn hôm nay";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            btnFind.Location = new Point(398, 94);
+            btnFind.Name = "btnFind";
+            btnFind.Size = new Size(167, 29);
+            btnFind.TabIndex = 5;
+            btnFind.Text = "Find a dish ";
+            btnFind.UseVisualStyleBackColor = true;
+            btnFind.Click += btnFind_Click;
             // 
             // lblResult
             // 
             lblResult.AutoSize = true;
-            lblResult.Location = new Point(44, 158);
+            lblResult.Location = new Point(75, 148);
             lblResult.Name = "lblResult";
-            lblResult.Size = new Size(50, 20);
+            lblResult.Size = new Size(21, 20);
             lblResult.TabIndex = 6;
-            lblResult.Text = "label1";
+            lblResult.Text = "....";
             // 
             // btnExit
             // 
-            btnExit.Location = new Point(440, 158);
+            btnExit.Location = new Point(434, 144);
             btnExit.Name = "btnExit";
             btnExit.Size = new Size(94, 29);
             btnExit.TabIndex = 7;
@@ -108,20 +109,20 @@
             btnExit.UseVisualStyleBackColor = true;
             btnExit.Click += btnExit_Click;
             // 
-            // btnGetFood
+            // Client
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(646, 250);
+            ClientSize = new Size(640, 217);
             Controls.Add(btnExit);
             Controls.Add(lblResult);
-            Controls.Add(button2);
+            Controls.Add(btnFind);
             Controls.Add(btnConnect);
             Controls.Add(txtPort);
             Controls.Add(lblPort);
             Controls.Add(lblServerIP);
             Controls.Add(txtServerIP);
-            Name = "btnGetFood";
+            Name = "Client";
             Text = "Client";
             ResumeLayout(false);
             PerformLayout();
@@ -134,7 +135,7 @@
         private Label lblPort;
         private TextBox txtPort;
         private Button btnConnect;
-        private Button button2;
+        private Button btnFind;
         private Label lblResult;
         private Button btnExit;
     }

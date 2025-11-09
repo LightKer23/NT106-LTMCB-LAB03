@@ -49,9 +49,9 @@
             // 
             // txtTenMonAn
             // 
-            txtTenMonAn.Location = new Point(143, 38);
+            txtTenMonAn.Location = new Point(84, 38);
             txtTenMonAn.Name = "txtTenMonAn";
-            txtTenMonAn.Size = new Size(125, 27);
+            txtTenMonAn.Size = new Size(191, 27);
             txtTenMonAn.TabIndex = 1;
             // 
             // lblMonAn
@@ -59,9 +59,9 @@
             lblMonAn.AutoSize = true;
             lblMonAn.Location = new Point(36, 41);
             lblMonAn.Name = "lblMonAn";
-            lblMonAn.Size = new Size(86, 20);
+            lblMonAn.Size = new Size(42, 20);
             lblMonAn.TabIndex = 2;
-            lblMonAn.Text = "Tên món ăn";
+            lblMonAn.Text = "Dish ";
             // 
             // btnThem
             // 
@@ -69,7 +69,7 @@
             btnThem.Name = "btnThem";
             btnThem.Size = new Size(94, 29);
             btnThem.TabIndex = 3;
-            btnThem.Text = "Thêm món ăn";
+            btnThem.Text = "Add";
             btnThem.UseVisualStyleBackColor = true;
             btnThem.Click += btnThem_Click;
             // 
@@ -79,7 +79,7 @@
             btnXoa.Name = "btnXoa";
             btnXoa.Size = new Size(106, 29);
             btnXoa.TabIndex = 4;
-            btnXoa.Text = "Xóa món ăn";
+            btnXoa.Text = "Remove dish";
             btnXoa.UseVisualStyleBackColor = true;
             btnXoa.Click += btnXoa_Click;
             // 
@@ -96,7 +96,7 @@
             // lblStatus
             // 
             lblStatus.AutoSize = true;
-            lblStatus.Location = new Point(36, 273);
+            lblStatus.Location = new Point(36, 267);
             lblStatus.Name = "lblStatus";
             lblStatus.Size = new Size(21, 20);
             lblStatus.TabIndex = 6;

@@ -33,7 +33,7 @@ namespace Bai05
             listener.Start();
             isRunning = true;
 
-            lblStatus.Text = "Server đang lắng nghe trên port 12000...";
+            lblStatus.Text = "Server are listenning on port 12000...";
             new Thread(AcceptClients).Start();
         }
 
@@ -61,21 +61,22 @@ namespace Bai05
                 {
                     if (dsMonAn.Count == 0)
                     {
-                        SendMessage(stream, "Chưa có món ăn nào trong danh sách!");
+                        SendMessage(stream, "List is empty!");
                     }
                     else
                     {
                         Random rnd = new Random();
                         string mon = dsMonAn[rnd.Next(dsMonAn.Count)];
-                        SendMessage(stream, "Hôm nay ăn: " + mon);
+                        SendMessage(stream, "Today's dish: " + mon);
+                        lstLog.Items.Add("Sent dish: " + mon);
                     }
                 }
                 else if (request.StartsWith("ADD:"))
                 {
                     string monMoi = request.Substring(4);
                     dsMonAn.Add(monMoi);
-                    lstLog.Items.Add("Đã thêm: " + monMoi);
-                    SendMessage(stream, "Đã thêm món: " + monMoi);
+                    lstLog.Items.Add("Added: " + monMoi);
+                    SendMessage(stream, "Dish added: " + monMoi);
                 }
                 else if (request == "EXIT")
                 {
@@ -107,15 +108,15 @@ namespace Bai05
         {
             if (lvMonAn.SelectedItems.Count == 0)
             {
-                MessageBox.Show("Vui lòng chọn món cần xóa!", "Thông báo",
+                MessageBox.Show("please select the dish to remove!", "Warning",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             string mon = lvMonAn.SelectedItems[0].Text;
             DialogResult result = MessageBox.Show(
-                $"Bạn có chắc muốn xóa món '{mon}'?",
-                "Xác nhận",
+                $"Do you want to remove '{mon}'?",
+                "Confirm",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
@@ -123,7 +124,7 @@ namespace Bai05
             {
                 dsMonAn.Remove(mon);
                 lvMonAn.Items.Remove(lvMonAn.SelectedItems[0]);
-                lstLog.Items.Add($"Đã xóa món: {mon}");
+                lstLog.Items.Add($"Dish removed: {mon}");
             }
         }
     }

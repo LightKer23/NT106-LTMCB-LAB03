@@ -22,22 +22,43 @@ namespace Bai05
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            client = new TcpClient(txtServerIP.Text, int.Parse(txtPort.Text));
-            stream = client.GetStream();
-            lblResult.Text = "Đã kết nối server!";
+            try
+            {
+                string ip = txtServerIP.Text.Trim();
+                int port = int.Parse(txtPort.Text.Trim());
+
+                client = new TcpClient();
+                client.Connect(ip, port);
+                stream = client.GetStream();
+
+                lblResult.Text = "Connected to server successfully!";
+                btnFind.Enabled = true;
+                btnExit.Enabled = true;
+            }
+            catch (SocketException)
+            {
+                MessageBox.Show(
+                    "Could not connect to the server.\n" +
+                    "Please make sure the server is running and listening.",
+                    "Connection Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+                lblResult.Text = "Connection failed.";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unexpected error: {ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            SendMessage("GET_FOOD");
-            lblResult.Text = ReceiveMessage();
-        }
 
         private void btnExit_Click(object sender, EventArgs e)
         {
             SendMessage("EXIT");
             client.Close();
-            lblResult.Text = "Đã ngắt kết nối.";
+            lblResult.Text = "Disconnected!";
         }
 
         private void SendMessage(string msg)
@@ -51,6 +72,21 @@ namespace Bai05
             byte[] buffer = new byte[1024];
             int bytes = stream.Read(buffer, 0, buffer.Length);
             return Encoding.UTF8.GetString(buffer, 0, bytes);
+        }
+
+        private void btnFind_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SendMessage("GET_FOOD");
+                string response = ReceiveMessage();
+                lblResult.Text = response;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error while getting food: {ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

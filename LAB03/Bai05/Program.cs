@@ -12,8 +12,8 @@ namespace Bai05
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             DialogResult result = MessageBox.Show(
-               "Chọn Yes để chạy Server\nChọn No để chạy Client",
-               "Chọn chế độ chạy",
+               "Select Yes to run the Server\nSelect No to run the Client",
+               "Choose the running mode",
                MessageBoxButtons.YesNo,
                MessageBoxIcon.Question
            );
