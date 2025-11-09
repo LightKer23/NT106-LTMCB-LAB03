@@ -27,7 +27,7 @@ namespace Bai02
         {
             if (isRunning)
             {
-                MessageBox.Show("Server đang chạy!");
+                MessageBox.Show("Server is already running!");
                 return;
             }
 
@@ -41,8 +41,8 @@ namespace Bai02
 
         private void StartListening()
         {
-            Socket? clientSocket = null; 
-            Socket? listener = null;   
+            Socket? clientSocket = null;
+            Socket? listener = null;
 
             try
             {
@@ -52,11 +52,11 @@ namespace Bai02
                     ProtocolType.Tcp
                 );
 
-                //Port 8080 thường bị chiếm bởi web servers
+                // Port 8080 is commonly occupied by web servers
                 IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 11000);
                 listener.Bind(ipep);
 
-                //-1 là deprecated, 10 rõ ràng hơn
+                // -1 is deprecated, 10 is more explicit
                 listener.Listen(10);
                 isRunning = true;
 
@@ -64,11 +64,10 @@ namespace Bai02
                 lvMessages.Items.Add(new ListViewItem("Client connected"));
 
                 int bytesReceived = 0;
-
-                //Đọc 1024 bytes/lần NHANH HƠN 1000 lần so với đọc từng byte
+                // Reading 1024 bytes at a time is 1000x FASTER than reading byte by byte
                 byte[] recv = new byte[1024];
 
-                //While loop kiểm tra kết nối
+                // While loop to check connection
                 string text = "";
                 while (clientSocket.Connected)
                 {
@@ -79,6 +78,7 @@ namespace Bai02
                             break;
 
                         text += Encoding.ASCII.GetString(recv, 0, bytesReceived);
+
                         if (text.EndsWith("\n"))
                         {
                             lvMessages.Items.Add(new ListViewItem(text.Trim()));
@@ -92,7 +92,6 @@ namespace Bai02
                     }
                 }
 
-
                 lvMessages.Items.Add(new ListViewItem("Client disconnected"));
             }
             catch (SocketException ex)
@@ -105,7 +104,7 @@ namespace Bai02
             }
             finally
             {
-                //Đảm bảo socket luôn được đóng, kể cả khi có lỗi
+                // Ensure sockets are always closed, even when errors occur
                 if (clientSocket != null)
                 {
                     clientSocket.Close();

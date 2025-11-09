@@ -71,9 +71,8 @@
             lblStatus.AutoSize = true;
             lblStatus.Location = new Point(302, 46);
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(326, 25);
+            lblStatus.Size = new Size(0, 25);
             lblStatus.TabIndex = 2;
-            lblStatus.Text = "Trạng thái “Đang lắng nghe…”";
             // 
             // lblTitle
             // 
