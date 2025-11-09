@@ -68,7 +68,7 @@ namespace Bai02
                 //Đọc 1024 bytes/lần NHANH HƠN 1000 lần so với đọc từng byte
                 byte[] recv = new byte[1024];
 
-                //While loop kiểm tra kết nối =====
+                //While loop kiểm tra kết nối
                 string text = "";
                 while (clientSocket.Connected)
                 {
@@ -76,7 +76,7 @@ namespace Bai02
                     {
                         bytesReceived = clientSocket.Receive(recv);
                         if (bytesReceived == 0)
-                            break; // client đóng kết nối
+                            break;
 
                         text += Encoding.ASCII.GetString(recv, 0, bytesReceived);
                         if (text.EndsWith("\n"))
