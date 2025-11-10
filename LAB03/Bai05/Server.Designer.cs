@@ -45,12 +45,11 @@
             // 
             // lblStatus
             // 
-            lblStatus.AutoSize = true;
-            lblStatus.Location = new Point(210, 100);
+            lblStatus.Location = new Point(125, 97);
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(21, 20);
+            lblStatus.Size = new Size(180, 30);
             lblStatus.TabIndex = 6;
-            lblStatus.Text = "....";
+            lblStatus.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // lstLog
             // 
@@ -71,7 +70,6 @@
             Name = "Server";
             Text = "Server";
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion

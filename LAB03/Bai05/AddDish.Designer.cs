@@ -42,9 +42,9 @@
             // 
             // btnAdd
             // 
-            btnAdd.Location = new Point(51, 335);
+            btnAdd.Location = new Point(72, 283);
             btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(94, 29);
+            btnAdd.Size = new Size(151, 29);
             btnAdd.TabIndex = 1;
             btnAdd.Text = "Add dish";
             btnAdd.UseVisualStyleBackColor = true;
@@ -53,7 +53,7 @@
             // lblDish
             // 
             lblDish.AutoSize = true;
-            lblDish.Location = new Point(51, 29);
+            lblDish.Location = new Point(72, 53);
             lblDish.Name = "lblDish";
             lblDish.Size = new Size(38, 20);
             lblDish.TabIndex = 2;
@@ -62,29 +62,29 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(51, 132);
+            label2.Location = new Point(72, 162);
             label2.Name = "label2";
             label2.Size = new Size(0, 20);
             label2.TabIndex = 3;
             // 
             // txtDish
             // 
-            txtDish.Location = new Point(218, 26);
+            txtDish.Location = new Point(72, 76);
             txtDish.Name = "txtDish";
-            txtDish.Size = new Size(125, 27);
+            txtDish.Size = new Size(151, 27);
             txtDish.TabIndex = 4;
             // 
             // txtContributor
             // 
-            txtContributor.Location = new Point(218, 85);
+            txtContributor.Location = new Point(72, 134);
             txtContributor.Name = "txtContributor";
-            txtContributor.Size = new Size(125, 27);
+            txtContributor.Size = new Size(151, 27);
             txtContributor.TabIndex = 5;
             // 
             // lblContriName
             // 
             lblContriName.AutoSize = true;
-            lblContriName.Location = new Point(51, 88);
+            lblContriName.Location = new Point(72, 111);
             lblContriName.Name = "lblContriName";
             lblContriName.Size = new Size(135, 20);
             lblContriName.TabIndex = 6;
@@ -93,23 +93,23 @@
             // lblDongGop
             // 
             lblDongGop.AutoSize = true;
-            lblDongGop.Location = new Point(51, 153);
+            lblDongGop.Location = new Point(72, 173);
             lblDongGop.Name = "lblDongGop";
-            lblDongGop.Size = new Size(170, 20);
+            lblDongGop.Size = new Size(130, 20);
             lblDongGop.TabIndex = 7;
-            lblDongGop.Text = "Đóng góp món ăn vào ?";
+            lblDongGop.Text = "Add your dish to ?";
             // 
             // chkTarget
             // 
             chkTarget.FormattingEnabled = true;
-            chkTarget.Location = new Point(51, 198);
+            chkTarget.Location = new Point(73, 196);
             chkTarget.Name = "chkTarget";
-            chkTarget.Size = new Size(150, 114);
+            chkTarget.Size = new Size(150, 70);
             chkTarget.TabIndex = 8;
             // 
             // lvPersonal
             // 
-            lvPersonal.Location = new Point(51, 407);
+            lvPersonal.Location = new Point(73, 318);
             lvPersonal.Name = "lvPersonal";
             lvPersonal.Size = new Size(151, 121);
             lvPersonal.TabIndex = 9;
@@ -117,11 +117,11 @@
             // 
             // btnChooseToday
             // 
-            btnChooseToday.Location = new Point(66, 578);
+            btnChooseToday.Location = new Point(73, 455);
             btnChooseToday.Name = "btnChooseToday";
-            btnChooseToday.Size = new Size(94, 29);
+            btnChooseToday.Size = new Size(150, 29);
             btnChooseToday.TabIndex = 10;
-            btnChooseToday.Text = "Get food";
+            btnChooseToday.Text = "Get dish for today";
             btnChooseToday.UseVisualStyleBackColor = true;
             btnChooseToday.Click += btnChooseToday_Click;
             // 
@@ -129,7 +129,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(563, 707);
+            ClientSize = new Size(297, 536);
             Controls.Add(btnChooseToday);
             Controls.Add(lvPersonal);
             Controls.Add(chkTarget);

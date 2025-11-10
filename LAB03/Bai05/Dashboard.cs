@@ -9,14 +9,44 @@ namespace Bai05
 
         private void btnClient_Click(object sender, EventArgs e)
         {
-            AddDish ad = new AddDish();
-            ad.Show();
+            try
+            {
+                AddDish ad = new AddDish();
+                ad.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error opening Add Dish form: " + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnServer_Click(object sender, EventArgs e)
         {
-            Server sv = new Server();
-            sv.Show();
+            try
+            {
+                Server sv = new Server();
+                sv.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error opening Server form: " + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Client cf = new Client();
+                cf.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error opening Find Food: " + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

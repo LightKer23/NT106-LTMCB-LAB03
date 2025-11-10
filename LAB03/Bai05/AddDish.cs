@@ -18,7 +18,6 @@ namespace Bai05
             InitializeComponent();
             InitDatabase();
 
-            // Khởi tạo form
             if (lvPersonal != null)
             {
                 lvPersonal.Visible = false;
@@ -86,7 +85,7 @@ namespace Bai05
 
         private void chkTarget_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            //Phải dùng BeginInvoke vì ItemCheck xảy ra trước khi item thực sự được check/uncheck
+            // Phải dùng BeginInvoke vì ItemCheck xảy ra trước khi item thực sự được check/uncheck
             this.BeginInvoke(new Action(() =>
             {
                 bool personal = chkTarget.CheckedItems.Cast<string>().Contains("For myself");
@@ -102,35 +101,61 @@ namespace Bai05
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            string name = txtDish.Text.Trim();
-            string contributor = txtContributor.Text.Trim();
-
-            if (string.IsNullOrEmpty(name))
+            try
             {
-                MessageBox.Show("Please enter a dish name!", "Warning",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                string name = txtDish.Text.Trim();
+                string contributor = txtContributor.Text.Trim();
 
-            //Kiểm tra có chọn mục đích không
-            if (chkTarget.CheckedItems.Count == 0)
+                if (string.IsNullOrEmpty(name))
+                {
+                    MessageBox.Show("Please enter a dish name!", "Warning",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (chkTarget.CheckedItems.Count == 0)
+                {
+                    MessageBox.Show("Please select at least one option!", "Warning",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (chkTarget.CheckedItems.Cast<string>().Contains("For community"))
+                {
+                    try
+                    {
+                        AddToCommunity(name, contributor);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error sending to community: " + ex.Message,
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
+                if (chkTarget.CheckedItems.Cast<string>().Contains("For myself"))
+                {
+                    try
+                    {
+                        AddToPersonal(name, contributor);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error adding to personal list: " + ex.Message,
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
+                txtDish.Clear();
+                txtContributor.Clear();
+            }
+            catch (Exception ex)
             {
-                MessageBox.Show("Please select at least one option (For myself or For community)!", "Warning",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                MessageBox.Show("Unexpected error: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            //Thêm vào community nếu được chọn
-            if (chkTarget.CheckedItems.Cast<string>().Contains("For community"))
-                AddToCommunity(name, contributor);
-
-            //Thêm vào personal nếu được chọn
-            if (chkTarget.CheckedItems.Cast<string>().Contains("For myself"))
-                AddToPersonal(name, contributor);
-
-            txtDish.Clear();
-            txtContributor.Clear();
         }
+
 
         private void AddToCommunity(string name, string contributor)
         {

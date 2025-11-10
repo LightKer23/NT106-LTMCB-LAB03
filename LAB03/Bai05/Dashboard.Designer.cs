@@ -30,6 +30,7 @@
         {
             btnServer = new Button();
             btnClient = new Button();
+            button1 = new Button();
             SuspendLayout();
             // 
             // btnServer
@@ -55,11 +56,22 @@
             btnClient.UseVisualStyleBackColor = true;
             btnClient.Click += btnClient_Click;
             // 
+            // button1
+            // 
+            button1.Location = new Point(100, 100);
+            button1.Name = "button1";
+            button1.Size = new Size(178, 40);
+            button1.TabIndex = 8;
+            button1.Text = "Find dish for today";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
             // Dashboard
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(382, 123);
+            ClientSize = new Size(382, 160);
+            Controls.Add(button1);
             Controls.Add(btnServer);
             Controls.Add(btnClient);
             Name = "Dashboard";
@@ -73,5 +85,6 @@
 
         private Button btnServer;
         private Button btnClient;
+        private Button button1;
     }
 }

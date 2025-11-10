@@ -123,7 +123,6 @@ namespace Bai05
             }
             catch (Exception ex)
             {
-                // không ném nữa, chỉ log
                 this.BeginInvoke(new Action(() => lstLog.Items.Add("SendMessage error: " + ex.Message)));
             }
         }

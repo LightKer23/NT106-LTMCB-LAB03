@@ -36,81 +36,86 @@
             lblResult = new Label();
             txtResult = new TextBox();
             lblStatus = new Label();
+            btnGetfood = new Button();
             SuspendLayout();
             // 
             // txtServerIP
             // 
-            txtServerIP.Location = new Point(130, 38);
+            txtServerIP.Location = new Point(135, 33);
             txtServerIP.Name = "txtServerIP";
-            txtServerIP.Size = new Size(125, 27);
+            txtServerIP.Size = new Size(204, 27);
             txtServerIP.TabIndex = 0;
             // 
             // lblServerIP
             // 
             lblServerIP.AutoSize = true;
-            lblServerIP.Location = new Point(39, 41);
+            lblServerIP.Location = new Point(44, 36);
             lblServerIP.Name = "lblServerIP";
-            lblServerIP.Size = new Size(69, 20);
+            lblServerIP.Size = new Size(0, 20);
             lblServerIP.TabIndex = 1;
-            lblServerIP.Text = "Server IP:";
             // 
             // lblPort
             // 
             lblPort.AutoSize = true;
-            lblPort.Location = new Point(39, 87);
+            lblPort.Location = new Point(44, 82);
             lblPort.Name = "lblPort";
-            lblPort.Size = new Size(38, 20);
+            lblPort.Size = new Size(0, 20);
             lblPort.TabIndex = 2;
-            lblPort.Text = "Port:";
             // 
             // txtPort
             // 
-            txtPort.Location = new Point(130, 84);
+            txtPort.Location = new Point(135, 79);
             txtPort.Name = "txtPort";
-            txtPort.Size = new Size(125, 27);
+            txtPort.Size = new Size(204, 27);
             txtPort.TabIndex = 3;
             // 
             // btnConnect
             // 
-            btnConnect.Location = new Point(317, 36);
+            btnConnect.Location = new Point(414, 31);
             btnConnect.Name = "btnConnect";
             btnConnect.Size = new Size(100, 30);
             btnConnect.TabIndex = 4;
-            btnConnect.Text = "Connect";
             btnConnect.UseVisualStyleBackColor = true;
             btnConnect.Click += btnConnect_Click;
             // 
             // lblResult
             // 
             lblResult.AutoSize = true;
-            lblResult.Location = new Point(39, 141);
+            lblResult.Location = new Point(44, 136);
             lblResult.Name = "lblResult";
-            lblResult.Size = new Size(52, 20);
+            lblResult.Size = new Size(0, 20);
             lblResult.TabIndex = 6;
-            lblResult.Text = "Result:";
             // 
             // txtResult
             // 
-            txtResult.Location = new Point(130, 138);
+            txtResult.Location = new Point(135, 133);
             txtResult.Name = "txtResult";
             txtResult.ReadOnly = true;
-            txtResult.Size = new Size(125, 27);
+            txtResult.Size = new Size(204, 27);
             txtResult.TabIndex = 8;
             // 
             // lblStatus
             // 
-            lblStatus.AutoSize = true;
-            lblStatus.Location = new Point(46, 200);
+            lblStatus.Location = new Point(44, 180);
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(18, 20);
+            lblStatus.Size = new Size(295, 31);
             lblStatus.TabIndex = 9;
-            lblStatus.Text = "...";
+            // 
+            // btnGetfood
+            // 
+            btnGetfood.Location = new Point(414, 73);
+            btnGetfood.Name = "btnGetfood";
+            btnGetfood.Size = new Size(100, 30);
+            btnGetfood.TabIndex = 10;
+            btnGetfood.UseVisualStyleBackColor = true;
+            btnGetfood.Click += btnGetfood_Click;
             // 
             // Client
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(457, 247);
+            ClientSize = new Size(558, 242);
+            Controls.Add(btnGetfood);
             Controls.Add(lblStatus);
             Controls.Add(txtResult);
             Controls.Add(lblResult);
@@ -135,5 +140,6 @@
         private Label lblResult;
         private TextBox txtResult;
         private Label lblStatus;
+        private Button btnGetfood;
     }
 }
