@@ -33,9 +33,7 @@
             lblPort = new Label();
             txtPort = new TextBox();
             btnConnect = new Button();
-            btnFind = new Button();
             lblResult = new Label();
-            btnExit = new Button();
             txtResult = new TextBox();
             lblStatus = new Label();
             SuspendLayout();
@@ -82,16 +80,6 @@
             btnConnect.UseVisualStyleBackColor = true;
             btnConnect.Click += btnConnect_Click;
             // 
-            // btnFind
-            // 
-            btnFind.Location = new Point(317, 82);
-            btnFind.Name = "btnFind";
-            btnFind.Size = new Size(100, 30);
-            btnFind.TabIndex = 5;
-            btnFind.Text = "Find a dish ";
-            btnFind.UseVisualStyleBackColor = true;
-            btnFind.Click += btnFind_Click;
-            // 
             // lblResult
             // 
             lblResult.AutoSize = true;
@@ -100,16 +88,6 @@
             lblResult.Size = new Size(52, 20);
             lblResult.TabIndex = 6;
             lblResult.Text = "Result:";
-            // 
-            // btnExit
-            // 
-            btnExit.Location = new Point(317, 136);
-            btnExit.Name = "btnExit";
-            btnExit.Size = new Size(100, 30);
-            btnExit.TabIndex = 7;
-            btnExit.Text = "Exit";
-            btnExit.UseVisualStyleBackColor = true;
-            btnExit.Click += btnExit_Click;
             // 
             // txtResult
             // 
@@ -135,9 +113,7 @@
             ClientSize = new Size(457, 247);
             Controls.Add(lblStatus);
             Controls.Add(txtResult);
-            Controls.Add(btnExit);
             Controls.Add(lblResult);
-            Controls.Add(btnFind);
             Controls.Add(btnConnect);
             Controls.Add(txtPort);
             Controls.Add(lblPort);
@@ -156,9 +132,7 @@
         private Label lblPort;
         private TextBox txtPort;
         private Button btnConnect;
-        private Button btnFind;
         private Label lblResult;
-        private Button btnExit;
         private TextBox txtResult;
         private Label lblStatus;
     }

@@ -9,8 +9,8 @@ namespace Bai05
 
         private void btnClient_Click(object sender, EventArgs e)
         {
-            Client cl = new Client();
-            cl.Show();
+            AddDish ad = new AddDish();
+            ad.Show();
         }
 
         private void btnServer_Click(object sender, EventArgs e)
