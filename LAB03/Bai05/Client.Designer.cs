@@ -36,11 +36,13 @@
             btnFind = new Button();
             lblResult = new Label();
             btnExit = new Button();
+            txtResult = new TextBox();
+            lblStatus = new Label();
             SuspendLayout();
             // 
             // txtServerIP
             // 
-            txtServerIP.Location = new Point(188, 45);
+            txtServerIP.Location = new Point(130, 38);
             txtServerIP.Name = "txtServerIP";
             txtServerIP.Size = new Size(125, 27);
             txtServerIP.TabIndex = 0;
@@ -48,33 +50,33 @@
             // lblServerIP
             // 
             lblServerIP.AutoSize = true;
-            lblServerIP.Location = new Point(75, 48);
+            lblServerIP.Location = new Point(39, 41);
             lblServerIP.Name = "lblServerIP";
-            lblServerIP.Size = new Size(66, 20);
+            lblServerIP.Size = new Size(69, 20);
             lblServerIP.TabIndex = 1;
-            lblServerIP.Text = "Server IP";
+            lblServerIP.Text = "Server IP:";
             // 
             // lblPort
             // 
             lblPort.AutoSize = true;
-            lblPort.Location = new Point(75, 98);
+            lblPort.Location = new Point(39, 87);
             lblPort.Name = "lblPort";
-            lblPort.Size = new Size(35, 20);
+            lblPort.Size = new Size(38, 20);
             lblPort.TabIndex = 2;
-            lblPort.Text = "Port";
+            lblPort.Text = "Port:";
             // 
             // txtPort
             // 
-            txtPort.Location = new Point(188, 95);
+            txtPort.Location = new Point(130, 84);
             txtPort.Name = "txtPort";
             txtPort.Size = new Size(125, 27);
             txtPort.TabIndex = 3;
             // 
             // btnConnect
             // 
-            btnConnect.Location = new Point(434, 44);
+            btnConnect.Location = new Point(317, 36);
             btnConnect.Name = "btnConnect";
-            btnConnect.Size = new Size(94, 29);
+            btnConnect.Size = new Size(100, 30);
             btnConnect.TabIndex = 4;
             btnConnect.Text = "Connect";
             btnConnect.UseVisualStyleBackColor = true;
@@ -82,9 +84,9 @@
             // 
             // btnFind
             // 
-            btnFind.Location = new Point(398, 94);
+            btnFind.Location = new Point(317, 82);
             btnFind.Name = "btnFind";
-            btnFind.Size = new Size(167, 29);
+            btnFind.Size = new Size(100, 30);
             btnFind.TabIndex = 5;
             btnFind.Text = "Find a dish ";
             btnFind.UseVisualStyleBackColor = true;
@@ -93,27 +95,46 @@
             // lblResult
             // 
             lblResult.AutoSize = true;
-            lblResult.Location = new Point(75, 148);
+            lblResult.Location = new Point(39, 141);
             lblResult.Name = "lblResult";
-            lblResult.Size = new Size(21, 20);
+            lblResult.Size = new Size(52, 20);
             lblResult.TabIndex = 6;
-            lblResult.Text = "....";
+            lblResult.Text = "Result:";
             // 
             // btnExit
             // 
-            btnExit.Location = new Point(434, 144);
+            btnExit.Location = new Point(317, 136);
             btnExit.Name = "btnExit";
-            btnExit.Size = new Size(94, 29);
+            btnExit.Size = new Size(100, 30);
             btnExit.TabIndex = 7;
             btnExit.Text = "Exit";
             btnExit.UseVisualStyleBackColor = true;
             btnExit.Click += btnExit_Click;
             // 
+            // txtResult
+            // 
+            txtResult.Location = new Point(130, 138);
+            txtResult.Name = "txtResult";
+            txtResult.ReadOnly = true;
+            txtResult.Size = new Size(125, 27);
+            txtResult.TabIndex = 8;
+            // 
+            // lblStatus
+            // 
+            lblStatus.AutoSize = true;
+            lblStatus.Location = new Point(46, 200);
+            lblStatus.Name = "lblStatus";
+            lblStatus.Size = new Size(18, 20);
+            lblStatus.TabIndex = 9;
+            lblStatus.Text = "...";
+            // 
             // Client
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(640, 217);
+            ClientSize = new Size(457, 247);
+            Controls.Add(lblStatus);
+            Controls.Add(txtResult);
             Controls.Add(btnExit);
             Controls.Add(lblResult);
             Controls.Add(btnFind);
@@ -138,5 +159,7 @@
         private Button btnFind;
         private Label lblResult;
         private Button btnExit;
+        private TextBox txtResult;
+        private Label lblStatus;
     }
 }

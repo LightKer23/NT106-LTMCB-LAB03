@@ -67,7 +67,7 @@ namespace Bai05
                     {
                         Random rnd = new Random();
                         string mon = dsMonAn[rnd.Next(dsMonAn.Count)];
-                        SendMessage(stream, "Today's dish: " + mon);
+                        SendMessage(stream, mon);
                         lstLog.Items.Add("Sent dish: " + mon);
                     }
                 }

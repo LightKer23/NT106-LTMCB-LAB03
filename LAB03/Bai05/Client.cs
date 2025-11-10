@@ -31,7 +31,7 @@ namespace Bai05
                 client.Connect(ip, port);
                 stream = client.GetStream();
 
-                lblResult.Text = "Connected to server successfully!";
+                lblStatus.Text = "Connected to server successfully!";
                 btnFind.Enabled = true;
                 btnExit.Enabled = true;
             }
@@ -44,7 +44,7 @@ namespace Bai05
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
                 );
-                lblResult.Text = "Connection failed.";
+                lblStatus.Text = "Connection failed.";
             }
             catch (Exception ex)
             {
@@ -58,7 +58,7 @@ namespace Bai05
         {
             SendMessage("EXIT");
             client.Close();
-            lblResult.Text = "Disconnected!";
+            lblStatus.Text = "Disconnected!";
         }
 
         private void SendMessage(string msg)
@@ -80,7 +80,7 @@ namespace Bai05
             {
                 SendMessage("GET_FOOD");
                 string response = ReceiveMessage();
-                lblResult.Text = response;
+                txtResult.Text = response;
             }
             catch (Exception ex)
             {
