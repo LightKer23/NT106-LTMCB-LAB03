@@ -38,9 +38,7 @@ namespace Bai06
                 if (_server == null)
                 {
                     _server = new TCPServer();
-                    //_server.OnServerLog += msg => lstBoxDiaryLog.Items.Add(msg);
 
-                    // --- Người tham gia ---
                     _server.OnJoin += name =>
                     {
                         if (lstBoxDiaryLog.InvokeRequired)
@@ -51,7 +49,6 @@ namespace Bai06
                             }));
                     };
 
-                    // --- Người rời phòng ---
                     _server.OnLeave += name =>
                     {
                         _server.OnLeave += name =>
@@ -64,7 +61,7 @@ namespace Bai06
                         };
                     };
 
-                    // --- Nhắn tin ---
+
                     _server.OnMsg += (user, text) =>
                     {
                         this.Invoke(new Action(() =>
@@ -73,7 +70,6 @@ namespace Bai06
                         }));
                     };
 
-                    // --- Thông báo hệ thống ---
                     _server.OnSys += msg =>
                     {
                         this.Invoke(new Action(() =>

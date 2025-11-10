@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bai06.TCPSocket
 {
-    internal class TCPClient
+    public class TCPClient
     {
         private TcpClient _client;
         private NetworkStream _stream;
@@ -20,6 +20,9 @@ namespace Bai06.TCPSocket
         public event Action<string>? OnJoin;
         public event Action<string>? OnLeave;
         public event Action<string, string>? OnMsg;
+        public event Action<int, string, string>? OnPrivateReady;
+        public event Action<int, string, string>? OnPrivateMsg;
+        public event Action<string, string>? OnPrivateNotice;
 
         public bool Connect(string host, int port, string name)
         {
@@ -118,6 +121,30 @@ namespace Bai06.TCPSocket
             {
                 OnSys?.Invoke(msg.Substring(5));
             }
+            else if (msg.StartsWith("[PRIVATE_NOTICE]|"))
+            {
+                var parts = msg.Split('|');
+                string from = parts[1];
+                string text = parts[2];
+                OnPrivateNotice?.Invoke(from, text);
+            }
+            else if (msg.StartsWith("[PRIVATE_READY]|"))
+            {
+                var parts = msg.Split('|');
+                int roomId = int.Parse(parts[1]);
+                string u1 = parts[2];
+                string u2 = parts[3];
+                OnPrivateReady?.Invoke(roomId, u1, u2);
+            }
+            else if (msg.StartsWith("[PRIVATE_MSG]|"))
+            {
+                var parts = msg.Split('|');
+                int roomId = int.Parse(parts[1]);
+                string from = parts[2];
+                string msgText = parts[3];
+                OnPrivateMsg?.Invoke(roomId, from, msgText);
+            }
+
             else if (msg.StartsWith("[LIST]|"))
             {
                 string[] names = msg.Substring(7).Split(',');
@@ -128,6 +155,18 @@ namespace Bai06.TCPSocket
                 OnMessageReceived?.Invoke(msg);
             }
         }
+
+        public void SendPrivateAccept(string from, string to)
+        {
+            Send($"[PRIVATE_ACCEPT]|{from}|{to}");
+        }
+
+        public void SendPrivateMsg(int roomId, string from, string msg)
+        {
+            Send($"[PRIVATE_MSG]|{roomId}|{from}|{msg}");
+        }
+
+
 
     }
 }

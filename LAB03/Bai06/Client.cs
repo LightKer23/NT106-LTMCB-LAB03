@@ -26,12 +26,14 @@ namespace Bai06
         {
             try
             {
+                btnConnect.Enabled = false;
+
                 string host = txtHost.Text;
                 int port = int.Parse(txtPort.Text);
                 _userName = textName.Text.Trim();
 
                 _client = new TCPClient();
-                // Hiển thị khi JOIN
+
                 _client.OnJoin += name =>
                 {
                     this.Invoke(new Action(() =>
@@ -40,16 +42,15 @@ namespace Bai06
                     }));
                 };
 
-                // Hiển thị khi LEAVE
                 _client.OnLeave += name =>
                 {
                     this.Invoke(new Action(() =>
                     {
+                        if (name == _userName) return;
                         lstTroChuyen.Items.Add($"{name} đã rời phòng");
                     }));
                 };
 
-                // Hiển thị khi có tin nhắn
                 _client.OnMsg += (user, text) =>
                 {
                     this.Invoke(new Action(() =>
@@ -59,7 +60,26 @@ namespace Bai06
                     }));
                 };
 
-                // Hiển thị khi có thông báo hệ thống
+                _client.OnPrivateNotice += (from, text) =>
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        var result = MessageBox.Show($"{from} {text}", "Chat riêng", MessageBoxButtons.YesNo);
+                        if (result == DialogResult.Yes)
+                            _client.SendPrivateAccept(_userName, from);
+                    }));
+                };
+
+                _client.OnPrivateReady += (roomId, u1, u2) =>
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        string other = (_userName == u1) ? u2 : u1;
+                        var chatForm = new ClientAndClient(_client, _userName, other, roomId);
+                        chatForm.Show();
+                    }));
+                };
+
                 _client.OnSys += msg =>
                 {
                     this.Invoke(new Action(() =>
@@ -98,7 +118,14 @@ namespace Bai06
             }
         }
 
-        private void btnOpenConnect_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
+        {
+            _client?.Disconnect();
+            lstTroChuyen.Items.Add("Bạn đã rời khỏi phòng.");
+        }
+
+
+        private void btnGui_Click(object sender, EventArgs e)
         {
             string msg = txtMessage.Text.Trim();
             if (string.IsNullOrEmpty(msg)) return;
@@ -108,13 +135,17 @@ namespace Bai06
             txtMessage.Clear();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void lstNguoiThamGia_DoubleClick(object sender, EventArgs e)
         {
-            _client?.Disconnect();
-            lstTroChuyen.Items.Add("Bạn đã rời khỏi phòng.");
+
+            if (lstNguoiThamGia.SelectedItem == null) return;
+
+            string target = lstNguoiThamGia.SelectedItem.ToString();
+            if (target == _userName) return;
+
+            _client.Send($"[PRIVATE_INVITE]|{_userName}|{target}");
+
         }
 
-
-       
     }
 }

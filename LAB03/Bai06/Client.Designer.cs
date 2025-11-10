@@ -39,7 +39,8 @@
             lblStatus = new Label();
             lblIP = new Label();
             groupBox1 = new GroupBox();
-            btnOpenConnect = new Button();
+            btnBrowse = new Button();
+            btnGui = new Button();
             txtMessage = new TextBox();
             label2 = new Label();
             grpBoxActivityLog = new GroupBox();
@@ -150,34 +151,44 @@
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(btnOpenConnect);
+            groupBox1.Controls.Add(btnBrowse);
+            groupBox1.Controls.Add(btnGui);
             groupBox1.Controls.Add(txtMessage);
             groupBox1.Controls.Add(label2);
             groupBox1.Font = new Font("Tahoma", 10.2F);
             groupBox1.Location = new Point(12, 68);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(413, 58);
+            groupBox1.Size = new Size(434, 58);
             groupBox1.TabIndex = 4;
             groupBox1.TabStop = false;
             groupBox1.Text = "Tin Nhắn";
             // 
-            // btnOpenConnect
+            // btnBrowse
             // 
-            btnOpenConnect.FlatAppearance.BorderColor = Color.White;
-            btnOpenConnect.Location = new Point(319, 15);
-            btnOpenConnect.Name = "btnOpenConnect";
-            btnOpenConnect.Size = new Size(86, 30);
-            btnOpenConnect.TabIndex = 8;
-            btnOpenConnect.Text = "Gửi";
-            btnOpenConnect.TextAlign = ContentAlignment.BottomCenter;
-            btnOpenConnect.UseVisualStyleBackColor = true;
-            btnOpenConnect.Click += btnOpenConnect_Click;
+            btnBrowse.Location = new Point(300, 15);
+            btnBrowse.Name = "btnBrowse";
+            btnBrowse.Size = new Size(44, 29);
+            btnBrowse.TabIndex = 9;
+            btnBrowse.Text = "...";
+            btnBrowse.UseVisualStyleBackColor = true;
+            // 
+            // btnGui
+            // 
+            btnGui.FlatAppearance.BorderColor = Color.White;
+            btnGui.Location = new Point(356, 15);
+            btnGui.Name = "btnGui";
+            btnGui.Size = new Size(72, 30);
+            btnGui.TabIndex = 8;
+            btnGui.Text = "Gửi";
+            btnGui.TextAlign = ContentAlignment.BottomCenter;
+            btnGui.UseVisualStyleBackColor = true;
+            btnGui.Click += btnGui_Click;
             // 
             // txtMessage
             // 
             txtMessage.Location = new Point(13, 17);
             txtMessage.Name = "txtMessage";
-            txtMessage.Size = new Size(300, 28);
+            txtMessage.Size = new Size(281, 28);
             txtMessage.TabIndex = 4;
             // 
             // label2
@@ -213,16 +224,17 @@
             lstNguoiThamGia.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lstNguoiThamGia.FormattingEnabled = true;
             lstNguoiThamGia.ItemHeight = 23;
-            lstNguoiThamGia.Location = new Point(431, 93);
+            lstNguoiThamGia.Location = new Point(452, 93);
             lstNguoiThamGia.Name = "lstNguoiThamGia";
-            lstNguoiThamGia.Size = new Size(172, 303);
+            lstNguoiThamGia.Size = new Size(151, 303);
             lstNguoiThamGia.TabIndex = 6;
+            lstNguoiThamGia.DoubleClick += lstNguoiThamGia_DoubleClick;
             // 
             // label3
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label3.Location = new Point(431, 66);
+            label3.Location = new Point(452, 66);
             label3.Name = "label3";
             label3.Size = new Size(135, 23);
             label3.TabIndex = 7;
@@ -232,9 +244,9 @@
             // 
             btnOutRoom.FlatAppearance.BorderColor = Color.White;
             btnOutRoom.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnOutRoom.Location = new Point(431, 402);
+            btnOutRoom.Location = new Point(452, 402);
             btnOutRoom.Name = "btnOutRoom";
-            btnOutRoom.Size = new Size(166, 36);
+            btnOutRoom.Size = new Size(151, 36);
             btnOutRoom.TabIndex = 11;
             btnOutRoom.Text = "Rời khỏi phòng";
             btnOutRoom.UseVisualStyleBackColor = true;
@@ -273,7 +285,7 @@
         private Label lblStatus;
         private Label lblIP;
         private GroupBox groupBox1;
-        private Button btnOpenConnect;
+        private Button btnGui;
         private TextBox txtMessage;
         private Label label2;
         private GroupBox grpBoxActivityLog;
@@ -283,5 +295,6 @@
         private ListBox lstNguoiThamGia;
         private Label label3;
         private Button btnOutRoom;
+        private Button btnBrowse;
     }
 }

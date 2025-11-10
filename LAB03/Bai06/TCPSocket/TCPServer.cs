@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bai06.TCPSocket
 {
-    internal class TCPServer
+    public class TCPServer
     {
         private TcpListener _listener;
         private List<TcpClient> _clients = new List<TcpClient>();
@@ -69,7 +69,6 @@ namespace Bai06.TCPSocket
                 while ((byteCount = ns.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     string message = Encoding.UTF8.GetString(buffer, 0, byteCount);
-                    //OnServerLog?.Invoke(message);
 
                     if (message.StartsWith("[JOIN]|"))
                     {
@@ -83,14 +82,8 @@ namespace Bai06.TCPSocket
                         }
 
                         OnJoin?.Invoke($"{name} ({parts[2]})");
-
-                        // ✅ Gửi danh sách hiện tại cho client mới
                         SendUserListToClient(client);
-
-                        // ✅ Thông báo đến các client khác
                         Broadcast(message, client);
-
-                        // ✅ Gửi lại danh sách cập nhật cho tất cả
                         BroadcastUserList();
                     }
                     else if (message.StartsWith("[LEAVE]|"))
@@ -107,7 +100,56 @@ namespace Bai06.TCPSocket
                         OnLeave?.Invoke(name);
                         Broadcast(message, client);
                         BroadcastUserList();
-                        break; // ✅ Thoát khỏi vòng lặp đọc
+                        break; 
+                    }
+                    else if (message.StartsWith("[PRIVATE_MSG]|"))
+                    {
+                        var parts = message.Split('|');
+                        int roomId = int.Parse(parts[1]);
+                        string from = parts[2];
+                        string msgText = parts[3];
+
+                        var room = _privateRooms.FirstOrDefault(r => r.id == roomId);
+                        if (room.id == 0) return;
+
+                        string user1 = room.user1;
+                        string user2 = room.user2;
+
+                        foreach (var user in new[] { user1, user2 })
+                        {
+                            var clientTarget = _userNames.FirstOrDefault(x => x.Value == user).Key;
+                            if (clientTarget != null)
+                            {
+                                SendToClient(clientTarget, $"[PRIVATE_MSG]|{roomId}|{from}|{msgText}");
+                            }
+                        }
+                    }
+                    else if (message.StartsWith("[PRIVATE_ACCEPT]|"))
+                    {
+                        var parts = message.Split('|');
+                        string from = parts[1];
+                        string to = parts[2];
+
+                        int roomId = _roomCounter++;
+                        _privateRooms.Add((roomId, from, to));
+
+                        SendPrivateRoomReady(from, to, roomId);
+                    }
+                    else if (message.StartsWith("[PRIVATE_INVITE]|"))
+                    {
+                        var parts = message.Split('|');
+                        string from = parts[1];
+                        string to = parts[2];
+
+                        TcpClient? target = null;
+                        lock (_userNames)
+                            target = _userNames.FirstOrDefault(x => x.Value == to).Key;
+
+                        if (target != null)
+                        {
+                            string notice = $"[PRIVATE_NOTICE]|{from}|muốn trò chuyện riêng với bạn";
+                            SendToClient(target, notice);
+                        }
                     }
                     else if (message.StartsWith("[MSG]|"))
                     {
@@ -177,6 +219,31 @@ namespace Bai06.TCPSocket
             _running = false;
             _listener.Stop();
             Log("Server stopped.");
+        }
+
+        private void SendToClient(TcpClient client, string message)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(message);
+            try { client.GetStream().Write(data, 0, data.Length); } catch { }
+        }
+
+
+
+
+        ///////////////////////////////////////////////////////
+        private int _roomCounter = 1;
+        private List<(int id, string user1, string user2)> _privateRooms = new List<(int, string, string)>();
+
+        private void SendPrivateRoomReady(string user1, string user2, int roomId)
+        {
+            string msg = $"[PRIVATE_READY]|{roomId}|{user1}|{user2}";
+            byte[] data = Encoding.UTF8.GetBytes(msg);
+
+            var c1 = _userNames.FirstOrDefault(x => x.Value == user1).Key;
+            var c2 = _userNames.FirstOrDefault(x => x.Value == user2).Key;
+
+            c1?.GetStream().Write(data, 0, data.Length);
+            c2?.GetStream().Write(data, 0, data.Length);
         }
     }
 }
