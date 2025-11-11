@@ -25,21 +25,25 @@ namespace Bai03
 
             btnDisconnect.Enabled = false;
             btnSend.Enabled = false;
+
+            
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            _client.Connect($"{_ip}", _port);
-            btnSend.Enabled = true;
-            btnDisconnect.Enabled = true;
-            btnConnect.Enabled = false;
+            if (_client.Connect($"{_ip}", _port))
+            {
+                btnSend.Enabled = true;
+                btnDisconnect.Enabled = true;
+                btnConnect.Enabled = false;
+            }
         }
 
         private void btnSend_Click(object sender, EventArgs e)
         {
             if (txtMessage.Text == "")
             {
-                MessageBox.Show("\n       data not entered    \n");
+                MessageBox.Show("Warning: Data not entered.", "Warning", MessageBoxButtons.OK,MessageBoxIcon.Warning);
                 return;
             }
             _client.Send(txtMessage.Text);

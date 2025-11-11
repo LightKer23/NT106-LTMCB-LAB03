@@ -17,7 +17,7 @@ namespace Bai03.TCPsocket
         private NetworkStream _stream;
         public event Action<string> OnStatus;
 
-        public void Connect(string ip, int port)
+        public bool Connect(string ip, int port)
         {
             try
             {
@@ -25,29 +25,62 @@ namespace Bai03.TCPsocket
                 _client.Connect(IPAddress.Parse(ip), port);
                 _stream = _client.GetStream();
             }
+            catch (SocketException)
+            {
+                MessageBox.Show($"Không thể kết nối đến server.", "Lỗi kết nối");
+                return false;
+
+            }
             catch (Exception ex)
             {
-                OnStatus?.Invoke($"Lỗi kết nối: {ex.Message}");
+                MessageBox.Show($"Lỗi kết nối: {ex.Message}");
+                return false;
             }
+            return true;
         }
 
         public void Send(string message)
         {
-            byte[] data = Encoding.UTF8.GetBytes(message + "\n");
-            _stream.Write(data, 0, data.Length);
-            OnStatus?.Invoke($"Đã gửi: {message}");
+            try
+            {
+
+                if (_client == null || !_client.Connected || _stream == null)
+                {
+                    MessageBox.Show("Chưa kết nối tới server. Không thể gửi dữ liệu.", "Lỗi kết nối");
+                    return;
+                }
+
+                byte[] data = Encoding.UTF8.GetBytes(message);
+                byte[] lengthPrefix = BitConverter.GetBytes(data.Length);
+
+                _stream.Write(lengthPrefix, 0, lengthPrefix.Length);
+                _stream.Write(data, 0, data.Length);
+                _stream.Flush();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể kết nối đến Server", "Lỗi kết nối");
+            }
         }
 
         public void Disconnect()
         {
-            if (_stream != null)
+            try
             {
-                byte[] data = Encoding.UTF8.GetBytes("_-_-_-_-_-_-_-_-_-_-_-");
-                _stream.Write(data, 0, data.Length);
-                _stream.Close();
+                if (_stream != null && _client != null && _client.Connected)
+                {
+                    byte[] data = Encoding.UTF8.GetBytes("_-_-_-_-_-_-_-_-_-_-_-\n");
+                    _stream.Write(data, 0, data.Length);
+                    _stream.Flush();
+                }
+
+                _stream?.Close();
+                _client?.Close();
             }
-            _client?.Close();
-            OnStatus?.Invoke("Đã ngắt kết nối.");
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi ngắt kết nối: " + ex.Message);
+            }
         }
     }
 }
