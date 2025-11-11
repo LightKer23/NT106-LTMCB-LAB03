@@ -35,7 +35,8 @@
             // 
             // btnListen
             // 
-            btnListen.Location = new Point(173, 36);
+            btnListen.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
+            btnListen.Location = new Point(161, 29);
             btnListen.Name = "btnListen";
             btnListen.Size = new Size(94, 29);
             btnListen.TabIndex = 5;
@@ -45,25 +46,28 @@
             // 
             // lblStatus
             // 
-            lblStatus.Location = new Point(125, 97);
+            lblStatus.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
+            lblStatus.Location = new Point(68, 71);
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(180, 30);
+            lblStatus.Size = new Size(282, 30);
             lblStatus.TabIndex = 6;
-            lblStatus.TextAlign = ContentAlignment.MiddleLeft;
+            lblStatus.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lstLog
             // 
+            lstLog.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
             lstLog.FormattingEnabled = true;
-            lstLog.Location = new Point(41, 165);
+            lstLog.ItemHeight = 19;
+            lstLog.Location = new Point(36, 114);
             lstLog.Name = "lstLog";
-            lstLog.Size = new Size(359, 104);
+            lstLog.Size = new Size(359, 99);
             lstLog.TabIndex = 7;
             // 
             // Server
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(430, 314);
+            ClientSize = new Size(430, 242);
             Controls.Add(lstLog);
             Controls.Add(lblStatus);
             Controls.Add(btnListen);

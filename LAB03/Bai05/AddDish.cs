@@ -27,7 +27,6 @@ namespace Bai05
                 btnChooseToday.Visible = false;
             }
 
-            // Thêm items vào CheckedListBox
             if (chkTarget != null)
             {
                 chkTarget.Items.Clear();
@@ -85,7 +84,6 @@ namespace Bai05
 
         private void chkTarget_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            // Phải dùng BeginInvoke vì ItemCheck xảy ra trước khi item thực sự được check/uncheck
             this.BeginInvoke(new Action(() =>
             {
                 bool personal = chkTarget.CheckedItems.Cast<string>().Contains("For myself");
@@ -159,7 +157,7 @@ namespace Bai05
 
         private void AddToCommunity(string name, string contributor)
         {
-            Client clientForm = new Client(name, contributor); // truyền dữ liệu
+            Client clientForm = new Client(name, contributor);
             clientForm.ShowDialog();
         }
 

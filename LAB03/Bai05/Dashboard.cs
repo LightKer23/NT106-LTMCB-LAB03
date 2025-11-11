@@ -9,15 +9,22 @@ namespace Bai05
 
         private void btnClient_Click(object sender, EventArgs e)
         {
-            try
+            DialogResult result = MessageBox.Show(
+                "What would you like to do?\n\n" +
+                "• YES: Add a new dish to personal or community\n" +
+                "• NO: Find a random dish from community\n",
+                "Client Menu",
+                MessageBoxButtons.YesNoCancel);
+
+            if (result == DialogResult.Yes)
             {
                 AddDish ad = new AddDish();
                 ad.Show();
             }
-            catch (Exception ex)
+            else if (result == DialogResult.No)
             {
-                MessageBox.Show("Error opening Add Dish form: " + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Client client = new Client();
+                client.Show();
             }
         }
 

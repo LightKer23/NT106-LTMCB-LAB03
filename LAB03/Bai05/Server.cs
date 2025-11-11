@@ -51,16 +51,13 @@ namespace Bai05
             {
                 while (isRunning)
                 {
-                    // AcceptTcpClient is blocking; nếu listener.Stop() được gọi sẽ ném
                     TcpClient client = listener.AcceptTcpClient();
-                    // log an toàn: invoke UI update
                     this.BeginInvoke(new Action(() => lstLog.Items.Add("Client connected")));
                     Task.Run(() => HandleClient(client));
                 }
             }
             catch (SocketException se)
             {
-                // thường xảy ra khi Stop() được gọi
                 this.BeginInvoke(new Action(() => lstLog.Items.Add("Listener stopped: " + se.Message)));
             }
             catch (Exception ex)
@@ -132,13 +129,21 @@ namespace Bai05
             using (var conn = new SQLiteConnection($"Data Source={dbPath};Version=3;"))
             {
                 conn.Open();
-                string sql = "SELECT Name FROM CommunityDishes ORDER BY RANDOM() LIMIT 1";
+                string sql = "SELECT Name, Contributor FROM CommunityDishes ORDER BY RANDOM() LIMIT 1";
                 using (var cmd = new SQLiteCommand(sql, conn))
+                using (var reader = cmd.ExecuteReader())
                 {
-                    object result = cmd.ExecuteScalar();
-                    return result?.ToString();
+                    if (reader.Read())
+                    {
+                        string name = reader["Name"].ToString();
+                        string contributor = reader["Contributor"].ToString();
+                        if (string.IsNullOrEmpty(contributor))
+                            contributor = "Anonymous";
+                        return $"{name} by {contributor}";
+                    }
                 }
             }
+            return null;
         }
 
         private void AddDishToDB(string name, string contributor)
@@ -167,7 +172,6 @@ namespace Bai05
                 isRunning = true;
 
                 lblStatus.Text = "Server is listening on port 12000...";
-                // Dùng Task.Run để chạy loop nhận client trên background thread
                 Task.Run(() => AcceptClients());
             }
             catch (Exception ex)

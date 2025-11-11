@@ -42,7 +42,8 @@
             // 
             // btnAdd
             // 
-            btnAdd.Location = new Point(72, 283);
+            btnAdd.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
+            btnAdd.Location = new Point(39, 321);
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(151, 29);
             btnAdd.TabIndex = 1;
@@ -53,30 +54,34 @@
             // lblDish
             // 
             lblDish.AutoSize = true;
-            lblDish.Location = new Point(72, 53);
+            lblDish.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
+            lblDish.Location = new Point(39, 35);
             lblDish.Name = "lblDish";
-            lblDish.Size = new Size(38, 20);
+            lblDish.Size = new Size(43, 19);
             lblDish.TabIndex = 2;
             lblDish.Text = "Dish";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(72, 162);
+            label2.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
+            label2.Location = new Point(39, 176);
             label2.Name = "label2";
-            label2.Size = new Size(0, 20);
+            label2.Size = new Size(0, 19);
             label2.TabIndex = 3;
             // 
             // txtDish
             // 
-            txtDish.Location = new Point(72, 76);
+            txtDish.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
+            txtDish.Location = new Point(39, 66);
             txtDish.Name = "txtDish";
             txtDish.Size = new Size(151, 27);
             txtDish.TabIndex = 4;
             // 
             // txtContributor
             // 
-            txtContributor.Location = new Point(72, 134);
+            txtContributor.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
+            txtContributor.Location = new Point(39, 140);
             txtContributor.Name = "txtContributor";
             txtContributor.Size = new Size(151, 27);
             txtContributor.TabIndex = 5;
@@ -84,32 +89,36 @@
             // lblContriName
             // 
             lblContriName.AutoSize = true;
-            lblContriName.Location = new Point(72, 111);
+            lblContriName.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
+            lblContriName.Location = new Point(39, 109);
             lblContriName.Name = "lblContriName";
-            lblContriName.Size = new Size(135, 20);
+            lblContriName.Size = new Size(155, 19);
             lblContriName.TabIndex = 6;
             lblContriName.Text = "Contributor's name";
             // 
             // lblDongGop
             // 
             lblDongGop.AutoSize = true;
-            lblDongGop.Location = new Point(72, 173);
+            lblDongGop.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
+            lblDongGop.Location = new Point(39, 195);
             lblDongGop.Name = "lblDongGop";
-            lblDongGop.Size = new Size(130, 20);
+            lblDongGop.Size = new Size(143, 19);
             lblDongGop.TabIndex = 7;
             lblDongGop.Text = "Add your dish to ?";
             // 
             // chkTarget
             // 
+            chkTarget.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
             chkTarget.FormattingEnabled = true;
-            chkTarget.Location = new Point(73, 196);
+            chkTarget.Location = new Point(40, 226);
             chkTarget.Name = "chkTarget";
             chkTarget.Size = new Size(150, 70);
             chkTarget.TabIndex = 8;
             // 
             // lvPersonal
             // 
-            lvPersonal.Location = new Point(73, 318);
+            lvPersonal.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
+            lvPersonal.Location = new Point(40, 364);
             lvPersonal.Name = "lvPersonal";
             lvPersonal.Size = new Size(151, 121);
             lvPersonal.TabIndex = 9;
@@ -117,7 +126,8 @@
             // 
             // btnChooseToday
             // 
-            btnChooseToday.Location = new Point(73, 455);
+            btnChooseToday.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
+            btnChooseToday.Location = new Point(40, 509);
             btnChooseToday.Name = "btnChooseToday";
             btnChooseToday.Size = new Size(150, 29);
             btnChooseToday.TabIndex = 10;
@@ -129,7 +139,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(297, 536);
+            ClientSize = new Size(232, 573);
             Controls.Add(btnChooseToday);
             Controls.Add(lvPersonal);
             Controls.Add(chkTarget);

@@ -41,54 +41,55 @@
             // 
             // txtServerIP
             // 
-            txtServerIP.Location = new Point(135, 33);
+            txtServerIP.Location = new Point(153, 33);
             txtServerIP.Name = "txtServerIP";
             txtServerIP.Size = new Size(204, 27);
             txtServerIP.TabIndex = 0;
             // 
             // lblServerIP
             // 
-            lblServerIP.AutoSize = true;
-            lblServerIP.Location = new Point(44, 36);
+            lblServerIP.Location = new Point(67, 36);
             lblServerIP.Name = "lblServerIP";
-            lblServerIP.Size = new Size(0, 20);
+            lblServerIP.Size = new Size(80, 20);
             lblServerIP.TabIndex = 1;
+            lblServerIP.Text = "Server IP:";
             // 
             // lblPort
             // 
-            lblPort.AutoSize = true;
-            lblPort.Location = new Point(44, 82);
+            lblPort.Location = new Point(67, 82);
             lblPort.Name = "lblPort";
-            lblPort.Size = new Size(0, 20);
+            lblPort.Size = new Size(80, 20);
             lblPort.TabIndex = 2;
+            lblPort.Text = "Port IP:";
             // 
             // txtPort
             // 
-            txtPort.Location = new Point(135, 79);
+            txtPort.Location = new Point(153, 79);
             txtPort.Name = "txtPort";
             txtPort.Size = new Size(204, 27);
             txtPort.TabIndex = 3;
             // 
             // btnConnect
             // 
-            btnConnect.Location = new Point(414, 31);
+            btnConnect.Location = new Point(392, 31);
             btnConnect.Name = "btnConnect";
             btnConnect.Size = new Size(100, 30);
             btnConnect.TabIndex = 4;
+            btnConnect.Text = "Connect";
             btnConnect.UseVisualStyleBackColor = true;
             btnConnect.Click += btnConnect_Click;
             // 
             // lblResult
             // 
-            lblResult.AutoSize = true;
-            lblResult.Location = new Point(44, 136);
+            lblResult.Location = new Point(67, 136);
             lblResult.Name = "lblResult";
-            lblResult.Size = new Size(0, 20);
+            lblResult.Size = new Size(80, 20);
             lblResult.TabIndex = 6;
+            lblResult.Text = "Result:";
             // 
             // txtResult
             // 
-            txtResult.Location = new Point(135, 133);
+            txtResult.Location = new Point(153, 133);
             txtResult.Name = "txtResult";
             txtResult.ReadOnly = true;
             txtResult.Size = new Size(204, 27);
@@ -96,17 +97,18 @@
             // 
             // lblStatus
             // 
-            lblStatus.Location = new Point(44, 180);
+            lblStatus.Location = new Point(67, 180);
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(295, 31);
+            lblStatus.Size = new Size(290, 31);
             lblStatus.TabIndex = 9;
             // 
             // btnGetfood
             // 
-            btnGetfood.Location = new Point(414, 73);
+            btnGetfood.Location = new Point(392, 77);
             btnGetfood.Name = "btnGetfood";
             btnGetfood.Size = new Size(100, 30);
             btnGetfood.TabIndex = 10;
+            btnGetfood.Text = "Get dish";
             btnGetfood.UseVisualStyleBackColor = true;
             btnGetfood.Click += btnGetfood_Click;
             // 
