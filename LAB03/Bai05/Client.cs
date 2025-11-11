@@ -74,11 +74,7 @@ namespace Bai05
                     string response = Encoding.UTF8.GetString(buffer, 0, bytes).Trim();
 
                     lblStatus.Text = "Dish sent successfully!";
-                    txtResult.Text = $"Server response: {response}";
-
-                    MessageBox.Show($"Dish '{dishName}' by '{contributor}' sent successfully!\n\n" +
-                                    $"Server says: {response}",
-                                    "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                   
                 }
             }
             catch (SocketException)
@@ -136,9 +132,6 @@ namespace Bai05
                     {
                         txtResult.Text = response;
                     }
-
-                    MessageBox.Show($"Random dish from community:\n\n{response}",
-                        "Today's Suggestion", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (SocketException)

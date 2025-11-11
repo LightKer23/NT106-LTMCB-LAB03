@@ -176,8 +176,6 @@ namespace Bai05
                 }
 
                 LoadPersonalDishes();
-                MessageBox.Show("Dish added to personal list!", "Success",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
