@@ -1,3 +1,5 @@
+using Exercise.Bai06;
+
 namespace Bai05
 {
     public partial class Dashboard : Form
@@ -10,21 +12,22 @@ namespace Bai05
         private void btnClient_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show(
-                "What would you like to do?\n\n" +
-                "• YES: Add a new dish to personal or community\n" +
-                "• NO: Find a random dish from community\n",
-                "Client Menu",
-                MessageBoxButtons.YesNoCancel);
+                "Bạn muốn làm việc với dữ liệu nào?\n\n" +
+                "• YES: Cộng đồng (qua Server)\n" +
+                "• NO: Cá nhân (local database)\n",
+                "Chọn nguồn dữ liệu",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
-                AddDish ad = new AddDish();
-                ad.Show();
+                WhatEatTodayForm form = new WhatEatTodayForm(isCommunityMode: true);
+                form.Show();
             }
             else if (result == DialogResult.No)
             {
-                Client client = new Client();
-                client.Show();
+                WhatEatTodayForm form = new WhatEatTodayForm(isCommunityMode: false);
+                form.Show();
             }
         }
 
@@ -37,22 +40,8 @@ namespace Bai05
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error opening Server form: " + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Client cf = new Client();
-                cf.ShowDialog();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error opening Find Food: " + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Lỗi mở Server: " + ex.Message,
+                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

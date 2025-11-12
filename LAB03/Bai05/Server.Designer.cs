@@ -47,9 +47,9 @@
             // lblStatus
             // 
             lblStatus.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
-            lblStatus.Location = new Point(68, 71);
+            lblStatus.Location = new Point(36, 71);
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(282, 30);
+            lblStatus.Size = new Size(359, 30);
             lblStatus.TabIndex = 6;
             lblStatus.TextAlign = ContentAlignment.MiddleCenter;
             // 

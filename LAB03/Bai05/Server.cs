@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SQLite;
-using System.Drawing;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Threading;
+using System.IO;
 
 namespace Bai05
 {
@@ -27,11 +24,12 @@ namespace Bai05
             CheckForIllegalCrossThreadCalls = false;
             Instance = this;
             InitDatabase();
+            LoadDishesFromDB();
         }
 
         private void InitDatabase()
         {
-            if (!System.IO.File.Exists(dbPath))
+            if (!File.Exists(dbPath))
                 SQLiteConnection.CreateFile(dbPath);
 
             using (var conn = new SQLiteConnection($"Data Source={dbPath};Version=3;"))
@@ -45,6 +43,73 @@ namespace Bai05
             }
         }
 
+        private void LoadDishesFromDB()
+        {
+            if (lstLog == null) return;
+            lstLog.Items.Add("Danh sách món ăn có sẵn:");
+
+            using (var conn = new SQLiteConnection($"Data Source={dbPath};Version=3;"))
+            {
+                conn.Open();
+                var cmd = new SQLiteCommand("SELECT Name, Contributor FROM CommunityDishes", conn);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    int count = 0;
+                    while (reader.Read())
+                    {
+                        string name = reader["Name"].ToString();
+                        string contributor = reader["Contributor"].ToString();
+                        lstLog.Items.Add($"  • {name} (by {contributor})");
+                        count++;
+                    }
+
+                    if (count == 0)
+                    {
+                        lstLog.Items.Add("  (Chưa có món ăn nào)");
+                    }
+                    else
+                    {
+                        lstLog.Items.Add($"Tổng: {count} món");
+                    }
+                }
+            }
+        }
+
+        public void btnListen_Click(object sender, EventArgs e)
+        {
+            if (isRunning)
+            {
+                MessageBox.Show("Server đang lắng nghe!", "Thông báo");
+                return;
+            }
+
+            try
+            {
+                listener = new TcpListener(IPAddress.Any, 12000);
+                listener.Start();
+                isRunning = true;
+
+                if (lblStatus != null)
+                    lblStatus.Text = "Server đang lắng nghe trên port 12000...";
+
+                if (lstLog != null)
+                    lstLog.Items.Add($"[{DateTime.Now:HH:mm:ss}] Server đã khởi động");
+
+                Task.Run(() => AcceptClients());
+
+                MessageBox.Show("Server đã khởi động thành công!", "Thành công");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không thể khởi động server: " + ex.Message, "Lỗi");
+
+                if (lblStatus != null)
+                    lblStatus.Text = "Khởi động thất bại";
+
+                isRunning = false;
+            }
+        }
+
         private void AcceptClients()
         {
             try
@@ -52,17 +117,24 @@ namespace Bai05
                 while (isRunning)
                 {
                     TcpClient client = listener.AcceptTcpClient();
-                    this.BeginInvoke(new Action(() => lstLog.Items.Add("Client connected")));
+
+                    if (lstLog != null)
+                        this.BeginInvoke(new Action(() =>
+                            lstLog.Items.Add($"[{DateTime.Now:HH:mm:ss}] Client kết nối")));
+
                     Task.Run(() => HandleClient(client));
                 }
             }
-            catch (SocketException se)
+            catch (SocketException)
             {
-                this.BeginInvoke(new Action(() => lstLog.Items.Add("Listener stopped: " + se.Message)));
+                if (lstLog != null)
+                    this.BeginInvoke(new Action(() =>
+                        lstLog.Items.Add($"[{DateTime.Now:HH:mm:ss}] Server đã dừng")));
             }
             catch (Exception ex)
             {
-                this.BeginInvoke(new Action(() => MessageBox.Show("AcceptClients error: " + ex.Message)));
+                this.BeginInvoke(new Action(() =>
+                    MessageBox.Show("Lỗi AcceptClients: " + ex.Message)));
             }
         }
 
@@ -83,22 +155,35 @@ namespace Bai05
                         if (request == "GET_FOOD")
                         {
                             string dish = GetRandomDish();
-                            SendMessage(stream, string.IsNullOrEmpty(dish) ? "List is empty!" : dish);
-                            this.BeginInvoke(new Action(() => lstLog.Items.Add("Sent: " + (dish ?? "empty"))));
+                            string response = string.IsNullOrEmpty(dish) ? "Danh sách trống!" : dish;
+                            SendMessage(stream, response);
+
+                            if (lstLog != null)
+                                this.BeginInvoke(new Action(() =>
+                                    lstLog.Items.Add($"[{DateTime.Now:HH:mm:ss}] Đã gửi: {response}")));
                         }
                         else if (request.StartsWith("ADD:"))
                         {
                             string data = request.Substring(4);
                             string[] parts = data.Split(new string[] { " by " }, StringSplitOptions.None);
                             string name = parts[0].Trim();
-                            string contributor = parts.Length > 1 ? parts[1].Trim() : "Anonymous";
+                            string contributor = parts.Length > 1 && !string.IsNullOrEmpty(parts[1].Trim())
+                                ? parts[1].Trim()
+                                : "Anonymous";
+
                             AddDishToDB(name, contributor);
-                            this.BeginInvoke(new Action(() => lstLog.Items.Add($"Added: {name} by {contributor}")));
-                            SendMessage(stream, "Dish added successfully!");
+
+                            if (lstLog != null)
+                                this.BeginInvoke(new Action(() =>
+                                    lstLog.Items.Add($"[{DateTime.Now:HH:mm:ss}] Thêm: {name} (by {contributor})")));
+
+                            SendMessage(stream, "Đã thêm món ăn thành công");
                         }
                         else if (request == "EXIT")
                         {
-                            this.BeginInvoke(new Action(() => lstLog.Items.Add("Client requested disconnect")));
+                            if (lstLog != null)
+                                this.BeginInvoke(new Action(() =>
+                                    lstLog.Items.Add($"[{DateTime.Now:HH:mm:ss}] Client ngắt kết nối")));
                             break;
                         }
                     }
@@ -106,21 +191,25 @@ namespace Bai05
             }
             catch (Exception ex)
             {
-                this.BeginInvoke(new Action(() => lstLog.Items.Add("HandleClient error: " + ex.Message)));
+                if (lstLog != null)
+                    this.BeginInvoke(new Action(() =>
+                        lstLog.Items.Add($"[{DateTime.Now:HH:mm:ss}] Lỗi: {ex.Message}")));
             }
         }
 
         private void SendMessage(NetworkStream stream, string msg)
         {
-            byte[] data = Encoding.UTF8.GetBytes(msg + "\n");
             try
             {
+                byte[] data = Encoding.UTF8.GetBytes(msg + "\n");
                 stream.Write(data, 0, data.Length);
                 stream.Flush();
             }
             catch (Exception ex)
             {
-                this.BeginInvoke(new Action(() => lstLog.Items.Add("SendMessage error: " + ex.Message)));
+                if (lstLog != null)
+                    this.BeginInvoke(new Action(() =>
+                        lstLog.Items.Add($"[{DateTime.Now:HH:mm:ss}] Lỗi gửi: {ex.Message}")));
             }
         }
 
@@ -145,7 +234,6 @@ namespace Bai05
             }
             return null;
         }
-
         private void AddDishToDB(string name, string contributor)
         {
             using (var conn = new SQLiteConnection($"Data Source={dbPath};Version=3;"))
@@ -161,9 +249,21 @@ namespace Bai05
             }
         }
 
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            isRunning = false;
+            listener?.Stop();
+            Instance = null;
+            base.OnFormClosing(e);
+        }
+
         private void btnListen_Click_1(object sender, EventArgs e)
         {
-            if (isRunning) return;
+            if (isRunning)
+            {
+                MessageBox.Show("Server đang lắng nghe!", "Thông báo");
+                return;
+            }
 
             try
             {
@@ -171,14 +271,23 @@ namespace Bai05
                 listener.Start();
                 isRunning = true;
 
-                lblStatus.Text = "Server is listening on port 12000...";
+                if (lblStatus != null)
+                    lblStatus.Text = "Server đang lắng nghe trên port 12000...";
+
+                if (lstLog != null)
+                    lstLog.Items.Add($"[{DateTime.Now:HH:mm:ss}] Server đã khởi động");
+
                 Task.Run(() => AcceptClients());
+
+                MessageBox.Show("Server đã khởi động thành công!", "Thành công");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Cannot start listener: " + ex.Message, "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                lblStatus.Text = "Listen failed.";
+                MessageBox.Show("Không thể khởi động server: " + ex.Message, "Lỗi");
+
+                if (lblStatus != null)
+                    lblStatus.Text = "Khởi động thất bại";
+
                 isRunning = false;
             }
         }
