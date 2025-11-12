@@ -20,7 +20,7 @@ namespace Bai01
         private int listenPort;
         public Server()
         {
-            InitializeComponent();        
+            InitializeComponent();
         }
         private void ListenButton_Click(object sender, EventArgs e)
         {
@@ -77,7 +77,7 @@ namespace Bai01
             catch (Exception ex)
             {
                 if (isRunning)
-                    InfoMessage("Có lỗi xảy ra, vui lòng thử lại sau " );
+                    InfoMessage("Có lỗi xảy ra, vui lòng thử lại sau ");
             }
         }
 
@@ -110,6 +110,12 @@ namespace Bai01
             isRunning = false;
             udpServer?.Close();
             base.OnFormClosing(e);
+        }
+
+        private void MessageListView_SizeChanged(object sender, EventArgs e)
+        {
+            if (MessageListView.Columns.Count > 0)
+                MessageListView.Columns[0].Width = MessageListView.ClientSize.Width - 4;
         }
     }
 }

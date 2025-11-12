@@ -33,6 +33,7 @@
             label1 = new Label();
             MessageListView = new ListView();
             label2 = new Label();
+            columnHeader1 = new ColumnHeader();
             SuspendLayout();
             // 
             // PortBox
@@ -66,13 +67,19 @@
             // 
             // MessageListView
             // 
+            MessageListView.Columns.AddRange(new ColumnHeader[] { columnHeader1 });
             MessageListView.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            MessageListView.FullRowSelect = true;
+            MessageListView.HeaderStyle = ColumnHeaderStyle.None;
             MessageListView.Location = new Point(62, 184);
+            MessageListView.MultiSelect = false;
             MessageListView.Name = "MessageListView";
+            MessageListView.ShowGroups = false;
             MessageListView.Size = new Size(555, 272);
             MessageListView.TabIndex = 3;
             MessageListView.UseCompatibleStateImageBehavior = false;
-            MessageListView.View = View.List;
+            MessageListView.View = View.Details;
+            MessageListView.SizeChanged += MessageListView_SizeChanged;
             // 
             // label2
             // 
@@ -83,6 +90,11 @@
             label2.Size = new Size(200, 25);
             label2.TabIndex = 4;
             label2.Text = "Received messages";
+            // 
+            // columnHeader1
+            // 
+            columnHeader1.Text = "Messages";
+            columnHeader1.Width = 500;
             // 
             // Server
             // 
@@ -108,5 +120,6 @@
         private Label label1;
         private ListView MessageListView;
         private Label label2;
+        private ColumnHeader columnHeader1;
     }
 }
