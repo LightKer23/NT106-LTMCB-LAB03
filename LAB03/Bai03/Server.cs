@@ -1,22 +1,32 @@
-﻿using System;
+﻿using Bai03.TCPsocket;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Bai03.TCPsocket;
 namespace Bai03
 {
     public partial class Server : Form
     {
         TCPServer _server = new TCPServer();
 
+        private string _ip;
+        private int _port;
+
         public Server()
         {
             InitializeComponent();
+
+
+
+            _ip = ConfigurationManager.AppSettings["ServerIP"];
+            _port = int.Parse(ConfigurationManager.AppSettings["ServerPort"]);
+
 
             _server.OnMessageReceived += (msg) =>
             {
@@ -32,9 +42,9 @@ namespace Bai03
 
         private void btnOpenListen_Click(object sender, EventArgs e)
         {
-            _server.Start(8080);
+            _server.Start(_port);
             btnStatus.Text = "Listened!";
-            lstMessage.Items.Add("Server started, open connetion port 8080!\n");
+            lstMessage.Items.Add($"Server started, open connetion port {_port}!\n");
             btnCloseListen.Enabled = true;
             btnOpenListen.Enabled = false;
         }

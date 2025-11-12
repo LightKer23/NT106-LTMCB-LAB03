@@ -94,7 +94,11 @@ namespace Bai03.TCPsocket
                         }
 
                         string msg = Encoding.UTF8.GetString(dataBuffer, 0, totalRead);
-                        if (msg == "_DISCONNECT_") break;
+                        if (msg == "--_DISCONNECT_--")
+                        {
+                            OnMessageReceived?.Invoke($"{clientInfo} disconnected server");
+                            break;
+                        }    
 
                         string[] lines = msg.Replace("\r", "").Split('\n');
 

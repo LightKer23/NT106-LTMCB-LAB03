@@ -27,13 +27,13 @@ namespace Bai03.TCPsocket
             }
             catch (SocketException)
             {
-                MessageBox.Show($"Không thể kết nối đến server.", "Lỗi kết nối");
+                MessageBox.Show($"Cannot connect to server.", "Connection error");
                 return false;
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi kết nối: {ex.Message}");
+                MessageBox.Show($"Connection error: {ex.Message}");
                 return false;
             }
             return true;
@@ -46,7 +46,7 @@ namespace Bai03.TCPsocket
 
                 if (_client == null || !_client.Connected || _stream == null)
                 {
-                    MessageBox.Show("Chưa kết nối tới server. Không thể gửi dữ liệu.", "Lỗi kết nối");
+                    MessageBox.Show("Not connected to server. Cannot send data.", "Connection error");
                     return;
                 }
 
@@ -59,7 +59,7 @@ namespace Bai03.TCPsocket
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Không thể kết nối đến Server", "Lỗi kết nối");
+                MessageBox.Show($"Cannot connect to server.", "Connection error");
             }
         }
 
@@ -69,7 +69,10 @@ namespace Bai03.TCPsocket
             {
                 if (_stream != null && _client != null && _client.Connected)
                 {
-                    byte[] data = Encoding.UTF8.GetBytes("_-_-_-_-_-_-_-_-_-_-_-\n");
+                    byte[] data = Encoding.UTF8.GetBytes("--_DISCONNECT_--");
+                    byte[] lengthPrefix = BitConverter.GetBytes(data.Length);
+
+                    _stream.Write(lengthPrefix, 0, lengthPrefix.Length);
                     _stream.Write(data, 0, data.Length);
                     _stream.Flush();
                 }
@@ -79,7 +82,7 @@ namespace Bai03.TCPsocket
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi khi ngắt kết nối: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message);
             }
         }
     }
