@@ -67,7 +67,7 @@
             grpBoxTCPServer.Font = new Font("Tahoma", 10.2F);
             grpBoxTCPServer.Location = new Point(12, 6);
             grpBoxTCPServer.Name = "grpBoxTCPServer";
-            grpBoxTCPServer.Size = new Size(591, 56);
+            grpBoxTCPServer.Size = new Size(765, 60);
             grpBoxTCPServer.TabIndex = 3;
             grpBoxTCPServer.TabStop = false;
             grpBoxTCPServer.Text = "Kết nối";
@@ -75,7 +75,7 @@
             // textName
             // 
             textName.Font = new Font("Tahoma", 10F);
-            textName.Location = new Point(367, 17);
+            textName.Location = new Point(508, 20);
             textName.Name = "textName";
             textName.Size = new Size(126, 28);
             textName.TabIndex = 10;
@@ -83,36 +83,36 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(313, 20);
+            label1.Location = new Point(458, 23);
             label1.Name = "label1";
-            label1.Size = new Size(59, 21);
+            label1.Size = new Size(44, 21);
             label1.TabIndex = 9;
-            label1.Text = "Name:";
+            label1.Text = "Tên:";
             // 
             // btnConnect
             // 
             btnConnect.FlatAppearance.BorderColor = Color.White;
-            btnConnect.Location = new Point(499, 15);
+            btnConnect.Location = new Point(654, 20);
             btnConnect.Name = "btnConnect";
-            btnConnect.Size = new Size(86, 30);
+            btnConnect.Size = new Size(100, 30);
             btnConnect.TabIndex = 8;
-            btnConnect.Text = "kết nối";
+            btnConnect.Text = "Kết nối";
             btnConnect.TextAlign = ContentAlignment.BottomCenter;
             btnConnect.UseVisualStyleBackColor = true;
             btnConnect.Click += btnConnect_Click;
             // 
             // txtPort
             // 
-            txtPort.Location = new Point(229, 17);
+            txtPort.Location = new Point(310, 20);
             txtPort.Name = "txtPort";
-            txtPort.Size = new Size(65, 28);
+            txtPort.Size = new Size(137, 28);
             txtPort.TabIndex = 6;
             // 
             // txtHost
             // 
-            txtHost.Location = new Point(59, 17);
+            txtHost.Location = new Point(99, 20);
             txtHost.Name = "txtHost";
-            txtHost.Size = new Size(123, 28);
+            txtHost.Size = new Size(146, 28);
             txtHost.TabIndex = 4;
             // 
             // lblConnects
@@ -126,11 +126,11 @@
             // lblPort
             // 
             lblPort.AutoSize = true;
-            lblPort.Location = new Point(188, 20);
+            lblPort.Location = new Point(251, 23);
             lblPort.Name = "lblPort";
-            lblPort.Size = new Size(46, 21);
+            lblPort.Size = new Size(53, 21);
             lblPort.TabIndex = 2;
-            lblPort.Text = "Port:";
+            lblPort.Text = "Cổng:";
             // 
             // lblStatus
             // 
@@ -143,11 +143,11 @@
             // lblIP
             // 
             lblIP.AutoSize = true;
-            lblIP.Location = new Point(13, 24);
+            lblIP.Location = new Point(13, 23);
             lblIP.Name = "lblIP";
-            lblIP.Size = new Size(50, 21);
+            lblIP.Size = new Size(83, 21);
             lblIP.TabIndex = 0;
-            lblIP.Text = "Host:";
+            lblIP.Text = "Server IP:";
             // 
             // groupBox1
             // 
@@ -156,16 +156,16 @@
             groupBox1.Controls.Add(txtMessage);
             groupBox1.Controls.Add(label2);
             groupBox1.Font = new Font("Tahoma", 10.2F);
-            groupBox1.Location = new Point(12, 68);
+            groupBox1.Location = new Point(12, 403);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(434, 58);
+            groupBox1.Size = new Size(590, 70);
             groupBox1.TabIndex = 4;
             groupBox1.TabStop = false;
             groupBox1.Text = "Tin Nhắn";
             // 
             // btnBrowse
             // 
-            btnBrowse.Location = new Point(300, 15);
+            btnBrowse.Location = new Point(455, 26);
             btnBrowse.Name = "btnBrowse";
             btnBrowse.Size = new Size(44, 29);
             btnBrowse.TabIndex = 9;
@@ -175,7 +175,7 @@
             // btnGui
             // 
             btnGui.FlatAppearance.BorderColor = Color.White;
-            btnGui.Location = new Point(356, 15);
+            btnGui.Location = new Point(505, 25);
             btnGui.Name = "btnGui";
             btnGui.Size = new Size(72, 30);
             btnGui.TabIndex = 8;
@@ -186,9 +186,9 @@
             // 
             // txtMessage
             // 
-            txtMessage.Location = new Point(13, 17);
+            txtMessage.Location = new Point(13, 26);
             txtMessage.Name = "txtMessage";
-            txtMessage.Size = new Size(281, 28);
+            txtMessage.Size = new Size(434, 28);
             txtMessage.TabIndex = 4;
             // 
             // label2
@@ -203,9 +203,9 @@
             // 
             grpBoxActivityLog.Controls.Add(lstTroChuyen);
             grpBoxActivityLog.Font = new Font("Tahoma", 10.2F);
-            grpBoxActivityLog.Location = new Point(12, 132);
+            grpBoxActivityLog.Location = new Point(12, 72);
             grpBoxActivityLog.Name = "grpBoxActivityLog";
-            grpBoxActivityLog.Size = new Size(413, 306);
+            grpBoxActivityLog.Size = new Size(590, 325);
             grpBoxActivityLog.TabIndex = 5;
             grpBoxActivityLog.TabStop = false;
             grpBoxActivityLog.Text = "Trò chuyện";
@@ -214,37 +214,37 @@
             // 
             lstTroChuyen.FormattingEnabled = true;
             lstTroChuyen.ItemHeight = 21;
-            lstTroChuyen.Location = new Point(6, 27);
+            lstTroChuyen.Location = new Point(13, 27);
             lstTroChuyen.Name = "lstTroChuyen";
-            lstTroChuyen.Size = new Size(399, 277);
+            lstTroChuyen.Size = new Size(564, 277);
             lstTroChuyen.TabIndex = 0;
             // 
             // lstNguoiThamGia
             // 
-            lstNguoiThamGia.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lstNguoiThamGia.Font = new Font("Tahoma", 10.2F);
             lstNguoiThamGia.FormattingEnabled = true;
-            lstNguoiThamGia.ItemHeight = 23;
-            lstNguoiThamGia.Location = new Point(452, 93);
+            lstNguoiThamGia.ItemHeight = 21;
+            lstNguoiThamGia.Location = new Point(626, 99);
             lstNguoiThamGia.Name = "lstNguoiThamGia";
-            lstNguoiThamGia.Size = new Size(151, 303);
+            lstNguoiThamGia.Size = new Size(151, 298);
             lstNguoiThamGia.TabIndex = 6;
             lstNguoiThamGia.DoubleClick += lstNguoiThamGia_DoubleClick;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label3.Location = new Point(452, 66);
+            label3.Font = new Font("Tahoma", 10.2F);
+            label3.Location = new Point(626, 72);
             label3.Name = "label3";
-            label3.Size = new Size(135, 23);
+            label3.Size = new Size(129, 21);
             label3.TabIndex = 7;
             label3.Text = "Người Tham Gia";
             // 
             // btnOutRoom
             // 
             btnOutRoom.FlatAppearance.BorderColor = Color.White;
-            btnOutRoom.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnOutRoom.Location = new Point(452, 402);
+            btnOutRoom.Font = new Font("Tahoma", 10.2F);
+            btnOutRoom.Location = new Point(626, 412);
             btnOutRoom.Name = "btnOutRoom";
             btnOutRoom.Size = new Size(151, 36);
             btnOutRoom.TabIndex = 11;
@@ -256,7 +256,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(611, 450);
+            ClientSize = new Size(797, 484);
             Controls.Add(btnOutRoom);
             Controls.Add(label3);
             Controls.Add(lstNguoiThamGia);

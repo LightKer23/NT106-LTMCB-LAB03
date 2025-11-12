@@ -38,10 +38,10 @@
             // 
             // btnGuiRieng
             // 
-            btnGuiRieng.Font = new Font("Segoe UI", 10.2F);
-            btnGuiRieng.Location = new Point(393, 35);
+            btnGuiRieng.Font = new Font("Tahoma", 9F);
+            btnGuiRieng.Location = new Point(330, 238);
             btnGuiRieng.Name = "btnGuiRieng";
-            btnGuiRieng.Size = new Size(94, 29);
+            btnGuiRieng.Size = new Size(50, 30);
             btnGuiRieng.TabIndex = 0;
             btnGuiRieng.Text = "Gửi";
             btnGuiRieng.UseVisualStyleBackColor = true;
@@ -49,25 +49,25 @@
             // 
             // txtMessClient
             // 
-            txtMessClient.Font = new Font("Segoe UI", 10.2F);
-            txtMessClient.Location = new Point(12, 35);
+            txtMessClient.Font = new Font("Tahoma", 9F);
+            txtMessClient.Location = new Point(12, 241);
             txtMessClient.Name = "txtMessClient";
-            txtMessClient.Size = new Size(368, 30);
+            txtMessClient.Size = new Size(312, 26);
             txtMessClient.TabIndex = 1;
             // 
             // lstMessClient
             // 
-            lstMessClient.Font = new Font("Segoe UI", 10.2F);
+            lstMessClient.Font = new Font("Tahoma", 9F);
             lstMessClient.FormattingEnabled = true;
-            lstMessClient.ItemHeight = 23;
-            lstMessClient.Location = new Point(12, 79);
+            lstMessClient.ItemHeight = 18;
+            lstMessClient.Location = new Point(12, 42);
             lstMessClient.Name = "lstMessClient";
-            lstMessClient.Size = new Size(368, 188);
+            lstMessClient.Size = new Size(368, 184);
             lstMessClient.TabIndex = 2;
             // 
             // btnThoatPhong
             // 
-            btnThoatPhong.Font = new Font("Segoe UI", 10.2F);
+            btnThoatPhong.Font = new Font("Tahoma", 9F);
             btnThoatPhong.Location = new Point(393, 238);
             btnThoatPhong.Name = "btnThoatPhong";
             btnThoatPhong.Size = new Size(94, 29);
@@ -79,25 +79,27 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 5);
+            label1.Font = new Font("Tahoma", 9F);
+            label1.Location = new Point(12, 9);
             label1.Name = "label1";
-            label1.Size = new Size(114, 20);
+            label1.Size = new Size(116, 18);
             label1.TabIndex = 4;
-            label1.Text = "tên người dùng:";
+            label1.Text = "Tên người dùng:";
             // 
             // lblName
             // 
             lblName.AutoSize = true;
+            lblName.Font = new Font("Tahoma", 9F);
             lblName.Location = new Point(124, 5);
             lblName.Name = "lblName";
-            lblName.Size = new Size(0, 20);
+            lblName.Size = new Size(0, 18);
             lblName.TabIndex = 5;
             // 
             // ClientAndClient
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(499, 279);
+            ClientSize = new Size(499, 292);
             Controls.Add(lblName);
             Controls.Add(label1);
             Controls.Add(btnThoatPhong);

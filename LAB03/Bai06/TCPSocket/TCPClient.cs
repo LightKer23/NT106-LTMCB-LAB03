@@ -66,7 +66,7 @@ namespace Bai06.TCPSocket
             }
             catch
             {
-                OnMessageReceived?.Invoke("kết nối tới server.");
+                OnMessageReceived?.Invoke("Kết nối tới server.");
             }
         }
 

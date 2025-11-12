@@ -20,6 +20,7 @@ namespace Bai06
         public Client()
         {
             InitializeComponent();
+            btnGui.Enabled = false;
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -28,10 +29,24 @@ namespace Bai06
             {
                 btnConnect.Enabled = false;
 
+                // Kiểm tra thông tin nhập vào
+                if (string.IsNullOrEmpty(txtHost.Text) || string.IsNullOrEmpty(txtPort.Text))
+                {
+                    MessageBox.Show("Vui lòng nhập địa chỉ Host và Port.");
+                    btnConnect.Enabled = true;
+                    return;
+                }
+                if (string.IsNullOrEmpty(textName.Text.Trim()))
+                {
+                    MessageBox.Show("Vui lòng nhập tên người dùng.");
+                    btnConnect.Enabled = true;
+                    return;
+                }
+
                 string host = txtHost.Text;
                 int port = int.Parse(txtPort.Text);
                 _userName = textName.Text.Trim();
-
+                
                 _client = new TCPClient();
 
                 _client.OnJoin += name =>
@@ -109,6 +124,7 @@ namespace Bai06
                 else
                 {
                     lstTroChuyen.Items.Add($"Kết nối thất bại đến Server {host}:{port}");
+                    btnConnect.Enabled = true;
                 }
 
             }
@@ -147,5 +163,13 @@ namespace Bai06
 
         }
 
+        private void txtMessage_TextChanged(object sender, EventArgs e)
+        {
+            string msg = txtMessage.Text.Trim();
+            if (string.IsNullOrEmpty(msg))
+                btnGui.Enabled = false;
+            else
+                btnGui.Enabled = true;
+        }
     }
 }
