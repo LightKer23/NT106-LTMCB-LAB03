@@ -42,6 +42,7 @@
             // 
             // btnListen
             // 
+            btnListen.Font = new Font("Tahoma", 10.2F);
             btnListen.Location = new Point(25, 38);
             btnListen.Name = "btnListen";
             btnListen.Size = new Size(130, 41);
@@ -54,6 +55,7 @@
             // 
             lvMessages.Columns.AddRange(new ColumnHeader[] { columnHeader1 });
             lvMessages.Dock = DockStyle.Fill;
+            lvMessages.Font = new Font("Tahoma", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lvMessages.Location = new Point(0, 0);
             lvMessages.Name = "lvMessages";
             lvMessages.Size = new Size(800, 336);
@@ -69,9 +71,10 @@
             // lblStatus
             // 
             lblStatus.AutoSize = true;
+            lblStatus.Font = new Font("Tahoma", 10.2F);
             lblStatus.Location = new Point(302, 46);
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(0, 25);
+            lblStatus.Size = new Size(0, 21);
             lblStatus.TabIndex = 2;
             // 
             // lblTitle

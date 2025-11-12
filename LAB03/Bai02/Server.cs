@@ -32,7 +32,6 @@ namespace Bai02
             }
 
             lblStatus.Text = "Listening on port 11000...";
-            lblStatus.ForeColor = System.Drawing.Color.Green;
 
             Thread serverThread = new Thread(StartListening);
             serverThread.IsBackground = true;
@@ -116,7 +115,6 @@ namespace Bai02
 
                 isRunning = false;
                 lblStatus.Text = "Server stopped";
-                lblStatus.ForeColor = System.Drawing.Color.Red;
             }
         }
 
