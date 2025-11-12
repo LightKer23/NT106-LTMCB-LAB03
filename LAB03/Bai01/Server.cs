@@ -26,12 +26,11 @@ namespace Bai01
         {
             if (!isRunning)
             {
-                if (!int.TryParse(PortBox.Text.Trim(), out listenPort))
+                if (!int.TryParse(PortBox.Text.Trim(), out listenPort) || listenPort < 1 || listenPort > 65535)
                 {
-                    MessageBox.Show("Port không hợp lệ");
+                    MessageBox.Show("Vui lòng không để trống Port và nhập Port hợp lệ (1-65535)");
                     return;
                 }
-
                 try
                 {
                     udpServer = new UdpClient(listenPort);
@@ -54,6 +53,7 @@ namespace Bai01
                 isRunning = false;
                 udpServer?.Close();
                 InfoMessage("[SERVER] Đã dừng.");
+                ListenButton.Text = "Listen";
             }
         }
 
@@ -76,7 +76,8 @@ namespace Bai01
             }
             catch (Exception ex)
             {
-                InfoMessage("[SERVER ERROR] " + ex.Message);
+                if (isRunning)
+                    InfoMessage("Có lỗi xảy ra, vui lòng thử lại sau " );
             }
         }
 
@@ -84,15 +85,23 @@ namespace Bai01
         {
             if (this.IsDisposed || MessageListView.IsDisposed)
                 return;
-
-            if (MessageListView.InvokeRequired)
+            try
             {
-                MessageListView.Invoke(new Action<string>(InfoMessage), text);
+                if (MessageListView.InvokeRequired)
+                {
+                    MessageListView.BeginInvoke(new Action<string>(InfoMessage), text);
+                }
+                else
+                {
+                    MessageListView.Items.Add(new ListViewItem(text));
+                    MessageListView.EnsureVisible(MessageListView.Items.Count - 1);
+                }
             }
-            else
+            catch (ObjectDisposedException)
             {
-                MessageListView.Items.Add(new ListViewItem(text));
-                MessageListView.EnsureVisible(MessageListView.Items.Count - 1);
+            }
+            catch (InvalidOperationException)
+            {
             }
         }
 
