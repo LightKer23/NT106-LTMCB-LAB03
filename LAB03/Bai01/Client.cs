@@ -19,11 +19,27 @@ namespace Bai01
             InitializeComponent();
         }
 
+        private bool IsValidIPv4(string ip)
+        {
+            if (string.IsNullOrWhiteSpace(ip)) return false;
+
+            string[] parts = ip.Split('.');
+            if (parts.Length != 4) return false;
+
+            foreach (string part in parts)
+            {
+                if (!int.TryParse(part, out int value)) return false;
+                if (value < 0 || value > 255) return false;
+            }
+
+            return true;
+        }
+
         private void SendButton_Click(object sender, EventArgs e)
         {
             string IPhost = IPRemotehost.Text.Trim();
             string Message = MessageRTextBox.Text;
-            if (string.IsNullOrWhiteSpace(IPhost) || !IPAddress.TryParse(IPhost, out _))
+            if (!IsValidIPv4(IPhost))
             {
                 MessageBox.Show("Vui lòng không để trống IP Remote Host và nhập đúng định dạng (vd: 127.0.0.1)");
                 return;
