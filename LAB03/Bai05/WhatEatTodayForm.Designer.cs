@@ -66,7 +66,7 @@
             btnAdd.BackColor = SystemColors.ButtonHighlight;
             btnAdd.FlatAppearance.BorderColor = SystemColors.ActiveBorder;
             btnAdd.FlatStyle = FlatStyle.Flat;
-            btnAdd.Font = new Font("Times New Roman", 10.2F);
+            btnAdd.Font = new Font("Tahoma", 10.2F);
             btnAdd.Location = new Point(526, 111);
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(112, 38);
@@ -80,7 +80,7 @@
             btnFind.BackColor = SystemColors.ButtonHighlight;
             btnFind.FlatAppearance.BorderColor = Color.Blue;
             btnFind.FlatStyle = FlatStyle.Flat;
-            btnFind.Font = new Font("Times New Roman", 10.2F);
+            btnFind.Font = new Font("Tahoma", 10.2F);
             btnFind.Location = new Point(526, 256);
             btnFind.Name = "btnFind";
             btnFind.Size = new Size(112, 38);
@@ -94,7 +94,7 @@
             btnDel.BackColor = SystemColors.ButtonHighlight;
             btnDel.FlatAppearance.BorderColor = SystemColors.ActiveBorder;
             btnDel.FlatStyle = FlatStyle.Flat;
-            btnDel.Font = new Font("Times New Roman", 10.2F);
+            btnDel.Font = new Font("Tahoma", 10.2F);
             btnDel.Location = new Point(526, 299);
             btnDel.Name = "btnDel";
             btnDel.Size = new Size(112, 38);
@@ -108,7 +108,7 @@
             btnExit.BackColor = SystemColors.ButtonHighlight;
             btnExit.FlatAppearance.BorderColor = SystemColors.ActiveBorder;
             btnExit.FlatStyle = FlatStyle.Flat;
-            btnExit.Font = new Font("Times New Roman", 10.2F);
+            btnExit.Font = new Font("Tahoma", 10.2F);
             btnExit.Location = new Point(526, 343);
             btnExit.Name = "btnExit";
             btnExit.Size = new Size(112, 38);
@@ -122,7 +122,7 @@
             groupBox1.Controls.Add(lblUserContribute);
             groupBox1.Controls.Add(pctDish);
             groupBox1.Controls.Add(lblNameDish);
-            groupBox1.Font = new Font("Times New Roman", 10.2F);
+            groupBox1.Font = new Font("Tahoma", 10.2F);
             groupBox1.Location = new Point(28, 439);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(611, 235);
@@ -155,7 +155,7 @@
             // listView1
             // 
             listView1.Columns.AddRange(new ColumnHeader[] { id, dish, contribute });
-            listView1.Font = new Font("Times New Roman", 10.2F);
+            listView1.Font = new Font("Tahoma", 10.2F);
             listView1.FullRowSelect = true;
             listView1.GridLines = true;
             listView1.Location = new Point(28, 256);
@@ -191,7 +191,7 @@
             groupBox2.Controls.Add(label2);
             groupBox2.Controls.Add(label1);
             groupBox2.Controls.Add(txtUser);
-            groupBox2.Font = new Font("Times New Roman", 10.2F);
+            groupBox2.Font = new Font("Tahoma", 10.2F);
             groupBox2.Location = new Point(28, 102);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(492, 142);
@@ -217,14 +217,14 @@
             // 
             txtDish.Location = new Point(194, 77);
             txtDish.Name = "txtDish";
-            txtDish.Size = new Size(284, 27);
+            txtDish.Size = new Size(284, 28);
             txtDish.TabIndex = 32;
             // 
             // txtAccess
             // 
             txtAccess.Location = new Point(194, 48);
             txtAccess.Name = "txtAccess";
-            txtAccess.Size = new Size(284, 27);
+            txtAccess.Size = new Size(284, 28);
             txtAccess.TabIndex = 31;
             // 
             // label5
@@ -271,48 +271,48 @@
             // 
             txtUser.Location = new Point(194, 20);
             txtUser.Name = "txtUser";
-            txtUser.Size = new Size(284, 27);
+            txtUser.Size = new Size(284, 28);
             txtUser.TabIndex = 26;
             // 
             // txtServerIP
             // 
-            txtServerIP.Font = new Font("Times New Roman", 10.2F);
+            txtServerIP.Font = new Font("Tahoma", 10.2F);
             txtServerIP.Location = new Point(117, 15);
             txtServerIP.Name = "txtServerIP";
-            txtServerIP.Size = new Size(140, 27);
+            txtServerIP.Size = new Size(140, 28);
             txtServerIP.TabIndex = 20;
             // 
             // txtPort
             // 
-            txtPort.Font = new Font("Times New Roman", 10.2F);
+            txtPort.Font = new Font("Tahoma", 10.2F);
             txtPort.Location = new Point(351, 15);
             txtPort.Name = "txtPort";
-            txtPort.Size = new Size(140, 27);
+            txtPort.Size = new Size(140, 28);
             txtPort.TabIndex = 21;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Font = new Font("Times New Roman", 10.2F);
+            label4.Font = new Font("Tahoma", 10.2F);
             label4.Location = new Point(28, 18);
             label4.Name = "label4";
-            label4.Size = new Size(81, 19);
+            label4.Size = new Size(88, 21);
             label4.TabIndex = 22;
             label4.Text = "Server IP: ";
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Font = new Font("Times New Roman", 10.2F);
+            label6.Font = new Font("Tahoma", 10.2F);
             label6.Location = new Point(297, 18);
             label6.Name = "label6";
-            label6.Size = new Size(48, 19);
+            label6.Size = new Size(51, 21);
             label6.TabIndex = 23;
             label6.Text = "Port: ";
             // 
             // btnConnect
             // 
-            btnConnect.Font = new Font("Times New Roman", 10.2F);
+            btnConnect.Font = new Font("Tahoma", 10.2F);
             btnConnect.Location = new Point(526, 9);
             btnConnect.Name = "btnConnect";
             btnConnect.Size = new Size(112, 38);
@@ -324,10 +324,10 @@
             // lblConnStatus
             // 
             lblConnStatus.AutoSize = true;
-            lblConnStatus.Font = new Font("Times New Roman", 10.2F);
+            lblConnStatus.Font = new Font("Tahoma", 10.2F);
             lblConnStatus.Location = new Point(28, 54);
             lblConnStatus.Name = "lblConnStatus";
-            lblConnStatus.Size = new Size(99, 19);
+            lblConnStatus.Size = new Size(106, 21);
             lblConnStatus.TabIndex = 25;
             lblConnStatus.Text = "Unconnected";
             // 

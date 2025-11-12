@@ -35,7 +35,7 @@
             // 
             // btnListen
             // 
-            btnListen.Font = new Font("Times New Roman", 10.2F);
+            btnListen.Font = new Font("Tahoma", 10.2F);
             btnListen.Location = new Point(161, 29);
             btnListen.Name = "btnListen";
             btnListen.Size = new Size(94, 29);
@@ -46,7 +46,7 @@
             // 
             // lblStatus
             // 
-            lblStatus.Font = new Font("Times New Roman", 10.2F);
+            lblStatus.Font = new Font("Tahoma", 10.2F);
             lblStatus.Location = new Point(36, 71);
             lblStatus.Name = "lblStatus";
             lblStatus.Size = new Size(359, 30);
@@ -55,12 +55,12 @@
             // 
             // lstLog
             // 
-            lstLog.Font = new Font("Times New Roman", 10.2F);
+            lstLog.Font = new Font("Tahoma", 10.2F);
             lstLog.FormattingEnabled = true;
-            lstLog.ItemHeight = 19;
+            lstLog.ItemHeight = 21;
             lstLog.Location = new Point(36, 114);
             lstLog.Name = "lstLog";
-            lstLog.Size = new Size(359, 99);
+            lstLog.Size = new Size(359, 88);
             lstLog.TabIndex = 7;
             // 
             // Server
