@@ -43,7 +43,6 @@ namespace Exercise.Bai06
             {
                 conn.Open();
 
-                // Tạo bảng NguoiDung
                 string createUser = @"CREATE TABLE IF NOT EXISTS NguoiDung (
                     IDNCC INTEGER PRIMARY KEY AUTOINCREMENT,
                     HoVaTen TEXT NOT NULL,
@@ -54,7 +53,6 @@ namespace Exercise.Bai06
                     cmd.ExecuteNonQuery();
                 }
 
-                // Tạo bảng MonAn
                 string createDish = @"CREATE TABLE IF NOT EXISTS MonAn (
                     IDMA INTEGER PRIMARY KEY AUTOINCREMENT,
                     TenMonAn TEXT NOT NULL,

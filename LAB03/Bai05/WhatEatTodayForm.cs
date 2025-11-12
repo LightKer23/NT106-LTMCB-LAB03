@@ -30,6 +30,15 @@ namespace Exercise.Bai06
             LoadAllDishes();
         }
 
+        protected override async void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            if (!isCommunityMode)
+            {
+                await Task.Run(() => LoadAllDishes());
+            }
+        }
+
         private void UpdateFormTitle()
         {
             this.Text = isCommunityMode
@@ -109,22 +118,12 @@ namespace Exercise.Bai06
             }
         }
 
-        private void btnAdd_Click(object sender, EventArgs e)
+        private async void btnAdd_Click(object sender, EventArgs e) 
         {
+
             string userName = txtUser.Text.Trim();
             string dishName = txtDish.Text.Trim();
             string accessLevel = txtAccess.Text.Trim();
-            if (string.IsNullOrEmpty(userName))
-            {
-                MessageBox.Show("Vui lòng nhập tên người dùng!", "Cảnh báo");
-                return;
-            }
-            if (string.IsNullOrEmpty(dishName))
-            {
-                MessageBox.Show("Vui lòng nhập tên món ăn!", "Cảnh báo");
-                return;
-            }
-            if (string.IsNullOrEmpty(accessLevel)) accessLevel = "User";
 
             try
             {
@@ -136,25 +135,41 @@ namespace Exercise.Bai06
                         return;
                     }
 
-                    string message = $"ADD:{dishName} by {userName}";
-                    SendAndReceive(message, out string response); 
-                    MessageBox.Show("Server: " + response, "Info");
-                    ClearInputs();
-                }
-                else
-                {
-                    int userId = dataHelper.CreateUser(userName, accessLevel);
-                    bool success = dataHelper.AddDish(dishName, selectedImage, userId);
-                    if (success)
+                    if (selectedImage != null)
                     {
-                        MessageBox.Show("Thêm món ăn thành công!", "Thành công");
-                        LoadAllDishes();
-                        ClearInputs();
+                        string base64 = Convert.ToBase64String(selectedImage);
+                        string message = $"ADDIMG:{dishName}|{userName}|{base64}";
+
+                        string response = await SendAndReceiveAsync(message);
+
+                        MessageBox.Show("Server: " + response, "Info");
+                        await LoadCommunityDishes();
                     }
                     else
                     {
-                        MessageBox.Show("Thêm món ăn thất bại!", "Lỗi");
+                        MessageBox.Show("Vui lòng chọn hình ảnh trước khi thêm món cộng đồng!", "Cảnh báo");
                     }
+
+                    ClearInputs();
+                }
+                else 
+                {
+                    await Task.Run(() =>
+                    {
+                        string userName = txtUser.Text.Trim();
+                        string dishName = txtDish.Text.Trim();
+                        string accessLevel = txtAccess.Text.Trim(); 
+
+                        int idNCC = dataHelper.CreateUser(userName, accessLevel);
+
+                        dataHelper.AddDish(dishName, selectedImage, idNCC);
+                    });
+
+                    MessageBox.Show("Đã thêm món ăn cá nhân thành công!", "Thành công");
+
+                    await Task.Run(() => LoadAllDishes());
+
+                    ClearInputs();
                 }
             }
             catch (Exception ex)
@@ -163,8 +178,7 @@ namespace Exercise.Bai06
             }
         }
 
-     
-        private void btnFind_Click(object sender, EventArgs e)
+        private async void btnFind_Click(object sender, EventArgs e)
         {
             try
             {
@@ -176,33 +190,63 @@ namespace Exercise.Bai06
                         return;
                     }
 
-                    SendAndReceive("GET_FOOD", out string response);
+                    string response = await SendAndReceiveAsync("GET_FOOD");
+
                     if (response == "Danh sách trống" || string.IsNullOrWhiteSpace(response))
                     {
                         MessageBox.Show("Danh sách cộng đồng chưa có món ăn nào!", "Thông báo");
-                        lblNameDish.Text = "";
-                        lblUserContribute.Text = "";
-                        pctDish.Image = null;
+                        ClearResultDisplay(); 
                     }
                     else
                     {
-                        lblNameDish.Text = response;
-                        lblUserContribute.Text = "";
-                        pctDish.Image = null;
+
+                        string[] parts = response.Split('|');
+
+                        if (parts.Length >= 2)
+                        {
+                            string dishName = parts[0];
+                            string contributorName = parts[1];
+                            string base64 = parts.Length > 2 ? parts[2] : "";
+
+                            byte[]? imgData = null;
+
+                            if (!string.IsNullOrEmpty(base64))
+                            {
+
+                                imgData = Convert.FromBase64String(base64);
+                            }
+
+                            DishInfo communityDish = new DishInfo
+                            {
+                                TenMonAn = dishName,
+                                TenNguoiDongGop = contributorName,
+                                HinhAnh = imgData
+                            };
+
+                            DisplayDish(communityDish);
+
+                        }
+                        else
+                        {
+                            MessageBox.Show(response, "Server message");
+                        }
                     }
                 }
                 else
                 {
-                    var dish = dataHelper.GetRandomDish();
+                    DishInfo? dish = await Task.Run(() => dataHelper.GetRandomDish());
+
                     if (dish != null)
                     {
                         DisplayDish(dish);
                     }
                     else
                     {
-                        MessageBox.Show("Chưa có món ăn nào!", "Thông báo");
+                        MessageBox.Show("Chưa có món ăn nào trong danh sách cá nhân.", "Thông báo");
+                        ClearResultDisplay();
                     }
                 }
+
             }
             catch (Exception ex)
             {
@@ -210,22 +254,41 @@ namespace Exercise.Bai06
             }
         }
 
-        private void SendAndReceive(string message, out string response)
+        private void ClearResultDisplay()
         {
-            response = "";
+            lblNameDish.Text = "";
+            lblUserContribute.Text = "";
+            pctDish.Image = null;
+        }
+
+        private async Task<string> SendAndReceiveAsync(string message)
+        {
             if (netStream == null) throw new InvalidOperationException("Not connected");
 
             byte[] data = Encoding.UTF8.GetBytes(message + "\n");
-            netStream.Write(data, 0, data.Length);
-            netStream.Flush();
+            await netStream.WriteAsync(data, 0, data.Length);
+            await netStream.FlushAsync();
 
-            byte[] buffer = new byte[2048];
-            int bytes = netStream.Read(buffer, 0, buffer.Length);
-            response = Encoding.UTF8.GetString(buffer, 0, bytes).Trim();
+            string response = await Task.Run(() =>
+            {
+                try
+                {
+                    var reader = new StreamReader(netStream, Encoding.UTF8, true, 4096, true);
+
+                    return reader.ReadLine() ?? string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    return "LỖI KHI NHẬN: " + ex.Message;
+                }
+            });
+
+            return response.Trim();
         }
 
         private void SendRawMessage(string message)
         {
+
             if (netStream == null) return;
             byte[] data = Encoding.UTF8.GetBytes(message + "\n");
             netStream.Write(data, 0, data.Length);
@@ -251,6 +314,41 @@ namespace Exercise.Bai06
             }
         }
 
+        private async Task LoadCommunityDishes()
+        {
+            listView1.Items.Clear();
+
+            if (tcpClient == null || !tcpClient.Connected)
+            {
+                return;
+            }
+            string response = await SendAndReceiveAsync("GET_ALL_FOODS");
+
+            if (response == "EMPTY" || string.IsNullOrWhiteSpace(response))
+            {
+                return;
+            }
+
+            string[] dishEntries = response.Split(new string[] { "###" }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string entry in dishEntries)
+            {
+                string[] parts = entry.Split('|');
+                if (parts.Length == 3)
+                {
+                    string id = parts[0];
+                    string name = parts[1];
+                    string contributor = parts[2];
+
+                    ListViewItem item = new ListViewItem(id);
+                    item.SubItems.Add(name);
+                    item.SubItems.Add(contributor);
+
+                    listView1.Items.Add(item);
+                }
+            }
+        }
+
         private void btnPickPic_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog ofd = new OpenFileDialog())
@@ -258,23 +356,42 @@ namespace Exercise.Bai06
                 ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    selectedImage = File.ReadAllBytes(ofd.FileName);
-                    MessageBox.Show("Đã chọn ảnh!", "Thành công");
+                    string filePath = ofd.FileName;
+                    FileInfo fileInfo = new FileInfo(filePath);
+                    const int MAX_FILE_SIZE_BYTES = 200 * 1024;
+
+                    if (fileInfo.Length > MAX_FILE_SIZE_BYTES)
+                    {
+                        MessageBox.Show("Kích thước file ảnh quá lớn (> 200KB). Vui lòng chọn ảnh nhỏ hơn.",
+                                        "Cảnh báo Kích thước", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        selectedImage = null; 
+                        return;
+                    }
+
+                    try
+                    {
+                        selectedImage = File.ReadAllBytes(filePath);
+                        MessageBox.Show("Đã chọn ảnh thành công.", "Thành công");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi đọc file: " + ex.Message, "Lỗi");
+                    }
                 }
             }
         }
 
-        private void btnDel_Click(object sender, EventArgs e)
+        private async void btnDel_Click(object sender, EventArgs e) 
         {
-            if (isCommunityMode)
+            if (listView1.SelectedItems.Count == 0)
             {
-                MessageBox.Show("Không thể xóa món ăn trong mode Cộng đồng!", "Thông báo");
+                MessageBox.Show("Vui lòng chọn món ăn cần xóa.", "Cảnh báo");
                 return;
             }
 
-            if (listView1.SelectedItems.Count == 0)
+            if (isCommunityMode)
             {
-                MessageBox.Show("Vui lòng chọn món ăn cần xóa!", "Cảnh báo");
+                MessageBox.Show("Chức năng xóa món ăn cộng đồng chưa được hỗ trợ!", "Thông báo");
                 return;
             }
 
@@ -285,10 +402,12 @@ namespace Exercise.Bai06
 
             if (result == DialogResult.Yes)
             {
-                if (dataHelper.DeleteDish(id))
+                bool success = await Task.Run(() => dataHelper.DeleteDish(id));
+
+                if (success)
                 {
                     MessageBox.Show("Xóa thành công!", "Thành công");
-                    LoadAllDishes();
+                    await Task.Run(() => LoadAllDishes());
                 }
                 else
                 {
@@ -297,12 +416,16 @@ namespace Exercise.Bai06
             }
         }
 
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        private async void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listView1.SelectedItems.Count == 0 || isCommunityMode) return;
+            if (listView1.SelectedItems.Count == 0) return; 
 
+            if (isCommunityMode)
+            {
+                return;
+            }
             int id = int.Parse(listView1.SelectedItems[0].Text);
-            DishInfo? dish = dataHelper.GetDishById(id);
+            DishInfo? dish = await Task.Run(() => dataHelper.GetDishById(id)); 
 
             if (dish != null)
             {
@@ -332,14 +455,13 @@ namespace Exercise.Bai06
             base.OnFormClosing(e);
         }
 
-        private void btnConnect_Click_1(object sender, EventArgs e)
+        private async void btnConnect_Click_1(object sender, EventArgs e)
         {
-            if (!isCommunityMode)
-                return;
+            if (!isCommunityMode) return;
 
             if (tcpClient != null && tcpClient.Connected)
             {
-                DisconnectFromServer();
+                DisconnectFromServer(); 
                 return;
             }
 
@@ -353,12 +475,18 @@ namespace Exercise.Bai06
             try
             {
                 tcpClient = new TcpClient();
-                var connectTask = tcpClient.ConnectAsync(ip, port);
-                if (!connectTask.Wait(3000))
+                lblConnStatus.Text = "Đang kết nối...";
+
+                using (var cts = new CancellationTokenSource(3000))
                 {
-                    tcpClient.Close();
-                    tcpClient = null;
-                    throw new SocketException();
+                    var connectTask = tcpClient.ConnectAsync(ip, port);
+                    var timeoutTask = Task.Delay(Timeout.Infinite, cts.Token);
+                    var completedTask = await Task.WhenAny(connectTask, timeoutTask);
+
+                    if (completedTask == timeoutTask)
+                    {
+                        throw new TimeoutException("Kết nối quá thời gian quy định (3 giây).");
+                    }
                 }
 
                 netStream = tcpClient.GetStream();
@@ -367,17 +495,18 @@ namespace Exercise.Bai06
                 btnConnect.Text = "Disconnect";
                 MessageBox.Show("Đã kết nối tới Server.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch (SocketException)
+            catch (TimeoutException)
             {
+                tcpClient?.Close();
                 tcpClient = null;
-                netStream = null;
                 lblConnStatus.Text = "Không thể kết nối";
-                MessageBox.Show("Không thể kết nối tới Server. Hãy kiểm tra IP/Port và Server đang Listen.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Không thể kết nối tới Server do timeout. Hãy kiểm tra IP/Port và Server đang Listen.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
                 tcpClient = null;
                 netStream = null;
+                lblConnStatus.Text = "Không thể kết nối";
                 MessageBox.Show("Lỗi khi kết nối: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

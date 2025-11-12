@@ -34,7 +34,7 @@
             // 
             // btnServer
             // 
-            btnServer.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
+            btnServer.Font = new Font("Times New Roman", 10.2F);
             btnServer.Location = new Point(216, 39);
             btnServer.Name = "btnServer";
             btnServer.Size = new Size(120, 40);
@@ -46,7 +46,7 @@
             // btnClient
             // 
             btnClient.FlatAppearance.BorderColor = Color.White;
-            btnClient.Font = new Font("Times New Roman", 10.2F, FontStyle.Bold);
+            btnClient.Font = new Font("Times New Roman", 10.2F);
             btnClient.Location = new Point(46, 39);
             btnClient.Name = "btnClient";
             btnClient.Size = new Size(120, 40);

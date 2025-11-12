@@ -26,7 +26,6 @@ namespace Bai05
             InitDatabase();
             LoadDishesFromDB();
         }
-
         private void InitDatabase()
         {
             if (!File.Exists(dbPath))
@@ -36,11 +35,38 @@ namespace Bai05
             {
                 conn.Open();
                 string sql = @"CREATE TABLE IF NOT EXISTS CommunityDishes(
-                               ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                               Name TEXT NOT NULL,
-                               Contributor TEXT)";
-                new SQLiteCommand(sql, conn).ExecuteNonQuery();
+                              ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                              Name TEXT NOT NULL,
+                              Contributor TEXT,
+                              Image BLOB);"; 
+
+                using (var cmd = new SQLiteCommand(sql, conn))
+                    cmd.ExecuteNonQuery();
             }
+        }
+
+        private string GetAllDishes()
+        {
+            StringBuilder sb = new StringBuilder();
+            using (var conn = new SQLiteConnection($"Data Source={dbPath};Version=3;"))
+            {
+                conn.Open();
+                string sql = "SELECT ID, Name, Contributor FROM CommunityDishes ORDER BY ID ASC";
+                using (var cmd = new SQLiteCommand(sql, conn))
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string id = reader["ID"].ToString() ?? "0";
+                        string name = reader["Name"].ToString() ?? "";
+                        string contributor = reader["Contributor"].ToString() ?? "";
+
+                        sb.Append($"{id}|{name}|{contributor}###");
+                    }
+                }
+            }
+
+            return sb.Length > 0 ? sb.ToString().TrimEnd('#') : "";
         }
 
         private void LoadDishesFromDB()
@@ -145,49 +171,80 @@ namespace Bai05
                 using (client)
                 {
                     NetworkStream stream = client.GetStream();
-                    byte[] buffer = new byte[1024];
-                    int byteCount;
-
-                    while ((byteCount = stream.Read(buffer, 0, buffer.Length)) > 0)
+                    using (var reader = new StreamReader(stream, Encoding.UTF8))
                     {
-                        string request = Encoding.UTF8.GetString(buffer, 0, byteCount).Trim();
+                        string? request;
 
-                        if (request == "GET_FOOD")
+                        while ((request = reader.ReadLine()) != null)
                         {
-                            string dish = GetRandomDish();
-                            string response = string.IsNullOrEmpty(dish) ? "Danh sách trống!" : dish;
-                            SendMessage(stream, response);
+                            request = request.Trim();
+
+                            if (string.IsNullOrEmpty(request)) continue;
 
                             if (lstLog != null)
                                 this.BeginInvoke(new Action(() =>
-                                    lstLog.Items.Add($"[{DateTime.Now:HH:mm:ss}] Đã gửi: {response}")));
-                        }
-                        else if (request.StartsWith("ADD:"))
-                        {
-                            string data = request.Substring(4);
-                            string[] parts = data.Split(new string[] { " by " }, StringSplitOptions.None);
-                            string name = parts[0].Trim();
-                            string contributor = parts.Length > 1 && !string.IsNullOrEmpty(parts[1].Trim())
-                                ? parts[1].Trim()
-                                : "Anonymous";
+                                    lstLog.Items.Add($"[{DateTime.Now:HH:mm:ss}] Nhận: {request.Substring(0, Math.Min(50, request.Length))}...")));
 
-                            AddDishToDB(name, contributor);
+                            if (request == "GET_FOOD")
+                            {
+                                string dish = GetRandomDish();
+                                string response = string.IsNullOrEmpty(dish) ? "Danh sách trống" : dish;
+                                SendMessage(stream, response);
+                            }
+                            else if (request == "GET_ALL_FOODS") 
+                            {
+                                string allDishes = GetAllDishes();
+                                string response = string.IsNullOrEmpty(allDishes) ? "EMPTY" : allDishes;
+                                SendMessage(stream, response);
+                            }
+                            else if (request.StartsWith("ADDIMG:"))
+                            {
+                                string data = request.Substring(7);
+                                string[] parts = data.Split('|');
 
-                            if (lstLog != null)
-                                this.BeginInvoke(new Action(() =>
-                                    lstLog.Items.Add($"[{DateTime.Now:HH:mm:ss}] Thêm: {name} (by {contributor})")));
+                                if (parts.Length == 3)
+                                {
+                                    string name = parts[0].Trim();
+                                    string contributor = parts[1].Trim();
+                                    string base64 = parts[2].Trim();
+                                    byte[]? imageBytes = null;
 
-                            SendMessage(stream, "Đã thêm món ăn thành công");
-                        }
-                        else if (request == "EXIT")
-                        {
-                            if (lstLog != null)
-                                this.BeginInvoke(new Action(() =>
-                                    lstLog.Items.Add($"[{DateTime.Now:HH:mm:ss}] Client ngắt kết nối")));
-                            break;
+                                    try
+                                    {
+                                        imageBytes = Convert.FromBase64String(base64);
+                                        AddDishToDB(name, contributor, imageBytes);
+                                        SendMessage(stream, "Đã thêm món ăn có ảnh thành công");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        SendMessage(stream, "Lỗi Server: " + ex.Message);
+                                    }
+                                }
+                                else
+                                {
+                                    SendMessage(stream, "Lỗi định dạng ADDIMG");
+                                }
+                            }
+                            else if (request == "EXIT")
+                            {
+                                if (lstLog != null)
+                                    this.BeginInvoke(new Action(() =>
+                                        lstLog.Items.Add($"[{DateTime.Now:HH:mm:ss}] Client ngắt kết nối")));
+                                break;
+                            }
+                            else
+                            {
+                                SendMessage(stream, "Lệnh không hợp lệ");
+                            }
                         }
                     }
                 }
+            }
+            catch (IOException) 
+            {
+                if (lstLog != null)
+                    this.BeginInvoke(new Action(() =>
+                        lstLog.Items.Add($"[{DateTime.Now:HH:mm:ss}] Client ngắt kết nối đột ngột")));
             }
             catch (Exception ex)
             {
@@ -218,32 +275,40 @@ namespace Bai05
             using (var conn = new SQLiteConnection($"Data Source={dbPath};Version=3;"))
             {
                 conn.Open();
-                string sql = "SELECT Name, Contributor FROM CommunityDishes ORDER BY RANDOM() LIMIT 1";
+
+                string sql = "SELECT Name, Contributor, Image FROM CommunityDishes ORDER BY RANDOM() LIMIT 1";
                 using (var cmd = new SQLiteCommand(sql, conn))
                 using (var reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        string name = reader["Name"].ToString();
-                        string contributor = reader["Contributor"].ToString();
-                        if (string.IsNullOrEmpty(contributor))
-                            contributor = "Anonymous";
-                        return $"{name} by {contributor}";
+                        string name = reader["Name"].ToString() ?? "";
+                        string contributor = reader["Contributor"].ToString() ?? "Anonymous";
+
+                        string base64Image = "";
+                        if (reader["Image"] != DBNull.Value)
+                        {
+                            byte[] imageBytes = (byte[])reader["Image"];
+                            base64Image = Convert.ToBase64String(imageBytes);
+                        }
+                        return $"{name}|{contributor}|{base64Image}";
                     }
                 }
             }
-            return null;
+            return "";
         }
-        private void AddDishToDB(string name, string contributor)
+        private void AddDishToDB(string name, string contributor, byte[]? image = null)
         {
             using (var conn = new SQLiteConnection($"Data Source={dbPath};Version=3;"))
             {
                 conn.Open();
-                string sql = "INSERT INTO CommunityDishes (Name, Contributor) VALUES (@n, @c)";
+                string sql = "INSERT INTO CommunityDishes (Name, Contributor, Image) VALUES (@n, @c, @img)";
                 using (var cmd = new SQLiteCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@n", name);
                     cmd.Parameters.AddWithValue("@c", contributor);
+
+                    cmd.Parameters.AddWithValue("@img", image ?? (object)DBNull.Value);
                     cmd.ExecuteNonQuery();
                 }
             }
