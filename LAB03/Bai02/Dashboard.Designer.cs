@@ -41,6 +41,7 @@
             btnServer.TabIndex = 3;
             btnServer.Text = "Server";
             btnServer.UseVisualStyleBackColor = true;
+            btnServer.Click += btnServer_Click;
             // 
             // btnClient
             // 
