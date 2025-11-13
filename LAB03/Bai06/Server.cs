@@ -95,8 +95,11 @@ namespace Bai06
         {
             try
             {
+                _SoLuong = 0;
                 _server?.Stop();
                 txtBoxStatus.Text = "Đã dừng";
+                btnCloseConnect.Enabled = false;
+                txtBoxConnects.Text = ""+ _SoLuong;
                 lstBoxDiaryLog.Items.Add("Server đã dừng.");
 
                 btnOpenConnect.Enabled = true;
