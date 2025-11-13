@@ -42,6 +42,7 @@
             btnClient.TabIndex = 0;
             btnClient.Text = "Client";
             btnClient.UseVisualStyleBackColor = true;
+            btnClient.Click += btnClient_Click;
             // 
             // btnServer
             // 
@@ -52,6 +53,7 @@
             btnServer.TabIndex = 1;
             btnServer.Text = "Server";
             btnServer.UseVisualStyleBackColor = true;
+            btnServer.Click += btnServer_Click;
             // 
             // Form1
             // 
@@ -68,7 +70,6 @@
         }
 
         #endregion
-
         private Button btnClient;
         private Button btnServer;
     }
