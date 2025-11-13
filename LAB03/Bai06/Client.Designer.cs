@@ -190,6 +190,8 @@
             txtMessage.Name = "txtMessage";
             txtMessage.Size = new Size(434, 28);
             txtMessage.TabIndex = 4;
+            txtMessage.Click += txtMessage_Click;
+            txtMessage.TextChanged += txtMessage_TextChanged;
             // 
             // label2
             // 

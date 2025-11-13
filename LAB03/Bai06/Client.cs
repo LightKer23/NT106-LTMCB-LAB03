@@ -23,13 +23,6 @@ namespace Bai06
             btnOutRoom.Enabled = false;
             btnGui.Enabled = false;
             txtMessage.Enabled = false;
-            //foreach(char m in txtMessage.Text)
-            //{
-            //    if(m != ' ')
-            //    {
-            //        btnGui.Enabled = true;
-            //    }
-            //}
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -55,7 +48,7 @@ namespace Bai06
                 string host = txtHost.Text;
                 int port = int.Parse(txtPort.Text);
                 _userName = textName.Text.Trim();
-                
+
                 _client = new TCPClient();
 
                 _client.OnJoin += name =>
@@ -179,13 +172,19 @@ namespace Bai06
 
         }
 
-        //private void txtMessage_TextChanged(object sender, EventArgs e)
-        //{
-        //    string msg = txtMessage.Text.Trim();
-        //    if (string.IsNullOrEmpty(msg))
-        //        btnGui.Enabled = false;
-        //    else
-        //        btnGui.Enabled = true;
-        //}
+
+        private void txtMessage_TextChanged(object sender, EventArgs e)
+        {
+            string msg = txtMessage.Text.Trim();
+            if (string.IsNullOrEmpty(msg))
+                btnGui.Enabled = false;
+            else
+                btnGui.Enabled = true;
+        }
+
+        private void txtMessage_Click(object sender, EventArgs e)
+        {
+            btnGui.Enabled = false;
+        }
     }
 }

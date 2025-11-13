@@ -54,6 +54,8 @@
             txtMessClient.Name = "txtMessClient";
             txtMessClient.Size = new Size(312, 26);
             txtMessClient.TabIndex = 1;
+            txtMessClient.Click += txtMessClient_Click;
+            txtMessClient.TextChanged += txtMessClient_TextChanged;
             // 
             // lstMessClient
             // 
@@ -90,7 +92,7 @@
             // 
             lblName.AutoSize = true;
             lblName.Font = new Font("Tahoma", 9F);
-            lblName.Location = new Point(124, 5);
+            lblName.Location = new Point(123, 9);
             lblName.Name = "lblName";
             lblName.Size = new Size(0, 18);
             lblName.TabIndex = 5;

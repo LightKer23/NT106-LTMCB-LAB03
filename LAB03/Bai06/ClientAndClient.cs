@@ -60,5 +60,23 @@ namespace Bai06
         {
             this.Close();
         }
+
+        private void txtMessClient_TextChanged(object sender, EventArgs e)
+        {
+            string msg = txtMessClient.Text.Trim();
+            if (string.IsNullOrEmpty(msg))
+            {
+                btnGuiRieng.Enabled = false;
+            }
+            else
+            {
+                btnGuiRieng.Enabled = true;
+            }
+        }
+
+        private void txtMessClient_Click(object sender, EventArgs e)
+        {
+            btnGuiRieng.Enabled = false;
+        }
     }
-}
+    }

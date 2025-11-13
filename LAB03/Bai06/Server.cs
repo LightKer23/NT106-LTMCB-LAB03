@@ -109,13 +109,19 @@ namespace Bai06
 
         private string GetLocalWiFiIP()
         {
+            string[] blacklist = { "virtual", "vmware", "hyper", "npcap", "loopback", "miniport" };
+
             foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
+                string name = ni.Name.ToLower();
+                if (blacklist.Any(x => name.Contains(x)))
+                    continue;
+
                 if (ni.OperationalStatus == OperationalStatus.Up &&
                     (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 ||
-                     ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet))
+                    ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet))
                 {
-                    foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                    foreach (var ip in ni.GetIPProperties().UnicastAddresses)
                     {
                         if (ip.Address.AddressFamily == AddressFamily.InterNetwork &&
                             !ip.Address.ToString().StartsWith("169.254"))
