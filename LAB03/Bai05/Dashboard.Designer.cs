@@ -35,29 +35,31 @@
             // btnServer
             // 
             btnServer.Font = new Font("Tahoma", 10.2F);
-            btnServer.Location = new Point(215, 40);
+            btnServer.Location = new Point(216, 39);
             btnServer.Name = "btnServer";
             btnServer.Size = new Size(120, 40);
             btnServer.TabIndex = 7;
             btnServer.Text = "Server";
             btnServer.UseVisualStyleBackColor = true;
+            btnServer.Click += btnServer_Click;
             // 
             // btnClient
             // 
             btnClient.FlatAppearance.BorderColor = Color.White;
             btnClient.Font = new Font("Tahoma", 10.2F);
-            btnClient.Location = new Point(45, 40);
+            btnClient.Location = new Point(46, 39);
             btnClient.Name = "btnClient";
             btnClient.Size = new Size(120, 40);
             btnClient.TabIndex = 6;
             btnClient.Text = "Client";
             btnClient.UseVisualStyleBackColor = true;
+            btnClient.Click += btnClient_Click;
             // 
             // Dashboard
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(382, 123);
+            ClientSize = new Size(382, 119);
             Controls.Add(btnServer);
             Controls.Add(btnClient);
             Name = "Dashboard";
