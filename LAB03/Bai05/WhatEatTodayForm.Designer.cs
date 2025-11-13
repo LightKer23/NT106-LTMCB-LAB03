@@ -81,7 +81,7 @@
             btnFind.FlatAppearance.BorderColor = Color.Blue;
             btnFind.FlatStyle = FlatStyle.Flat;
             btnFind.Font = new Font("Tahoma", 10.2F);
-            btnFind.Location = new Point(526, 256);
+            btnFind.Location = new Point(526, 299);
             btnFind.Name = "btnFind";
             btnFind.Size = new Size(112, 38);
             btnFind.TabIndex = 4;
@@ -95,7 +95,7 @@
             btnDel.FlatAppearance.BorderColor = SystemColors.ActiveBorder;
             btnDel.FlatStyle = FlatStyle.Flat;
             btnDel.Font = new Font("Tahoma", 10.2F);
-            btnDel.Location = new Point(526, 299);
+            btnDel.Location = new Point(526, 342);
             btnDel.Name = "btnDel";
             btnDel.Size = new Size(112, 38);
             btnDel.TabIndex = 5;
@@ -109,7 +109,7 @@
             btnExit.FlatAppearance.BorderColor = SystemColors.ActiveBorder;
             btnExit.FlatStyle = FlatStyle.Flat;
             btnExit.Font = new Font("Tahoma", 10.2F);
-            btnExit.Location = new Point(526, 343);
+            btnExit.Location = new Point(526, 386);
             btnExit.Name = "btnExit";
             btnExit.Size = new Size(112, 38);
             btnExit.TabIndex = 6;
@@ -123,7 +123,7 @@
             groupBox1.Controls.Add(pctDish);
             groupBox1.Controls.Add(lblNameDish);
             groupBox1.Font = new Font("Tahoma", 10.2F);
-            groupBox1.Location = new Point(28, 439);
+            groupBox1.Location = new Point(27, 481);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(611, 235);
             groupBox1.TabIndex = 7;
@@ -158,9 +158,9 @@
             listView1.Font = new Font("Tahoma", 10.2F);
             listView1.FullRowSelect = true;
             listView1.GridLines = true;
-            listView1.Location = new Point(28, 256);
+            listView1.Location = new Point(28, 299);
             listView1.Name = "listView1";
-            listView1.Size = new Size(491, 172);
+            listView1.Size = new Size(491, 176);
             listView1.TabIndex = 18;
             listView1.UseCompatibleStateImageBehavior = false;
             listView1.View = View.Details;
@@ -194,7 +194,7 @@
             groupBox2.Font = new Font("Tahoma", 10.2F);
             groupBox2.Location = new Point(28, 102);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(492, 142);
+            groupBox2.Size = new Size(492, 174);
             groupBox2.TabIndex = 19;
             groupBox2.TabStop = false;
             groupBox2.Text = "Nhập";
@@ -205,7 +205,7 @@
             btnPickPic.FlatAppearance.BorderColor = SystemColors.ActiveCaptionText;
             btnPickPic.FlatStyle = FlatStyle.Flat;
             btnPickPic.Font = new Font("Tahoma", 7.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnPickPic.Location = new Point(290, 105);
+            btnPickPic.Location = new Point(290, 129);
             btnPickPic.Name = "btnPickPic";
             btnPickPic.Size = new Size(82, 26);
             btnPickPic.TabIndex = 33;
@@ -215,14 +215,15 @@
             // 
             // txtDish
             // 
-            txtDish.Location = new Point(194, 77);
+            txtDish.Location = new Point(194, 93);
             txtDish.Name = "txtDish";
             txtDish.Size = new Size(284, 28);
             txtDish.TabIndex = 32;
+            txtDish.TextChanged += txtDish_TextChanged;
             // 
             // txtAccess
             // 
-            txtAccess.Location = new Point(194, 48);
+            txtAccess.Location = new Point(194, 56);
             txtAccess.Name = "txtAccess";
             txtAccess.Size = new Size(284, 28);
             txtAccess.TabIndex = 31;
@@ -231,7 +232,7 @@
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Tahoma", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label5.Location = new Point(18, 48);
+            label5.Location = new Point(18, 61);
             label5.Name = "label5";
             label5.Size = new Size(85, 18);
             label5.TabIndex = 30;
@@ -241,7 +242,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Tahoma", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label3.Location = new Point(18, 77);
+            label3.Location = new Point(18, 98);
             label3.Name = "label3";
             label3.Size = new Size(62, 18);
             label3.TabIndex = 29;
@@ -251,7 +252,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Tahoma", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label2.Location = new Point(18, 105);
+            label2.Location = new Point(18, 132);
             label2.Name = "label2";
             label2.Size = new Size(112, 18);
             label2.TabIndex = 28;
@@ -261,7 +262,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Tahoma", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label1.Location = new Point(18, 20);
+            label1.Location = new Point(18, 25);
             label1.Name = "label1";
             label1.Size = new Size(116, 18);
             label1.TabIndex = 27;
@@ -306,9 +307,9 @@
             label6.Font = new Font("Tahoma", 10.2F);
             label6.Location = new Point(297, 18);
             label6.Name = "label6";
-            label6.Size = new Size(51, 21);
+            label6.Size = new Size(58, 21);
             label6.TabIndex = 23;
-            label6.Text = "Port: ";
+            label6.Text = "Cổng: ";
             // 
             // btnConnect
             // 
@@ -317,7 +318,7 @@
             btnConnect.Name = "btnConnect";
             btnConnect.Size = new Size(112, 38);
             btnConnect.TabIndex = 24;
-            btnConnect.Text = "Connect";
+            btnConnect.Text = "Kết nối";
             btnConnect.UseVisualStyleBackColor = true;
             btnConnect.Click += btnConnect_Click_1;
             // 
@@ -327,9 +328,9 @@
             lblConnStatus.Font = new Font("Tahoma", 10.2F);
             lblConnStatus.Location = new Point(28, 54);
             lblConnStatus.Name = "lblConnStatus";
-            lblConnStatus.Size = new Size(106, 21);
+            lblConnStatus.Size = new Size(187, 21);
             lblConnStatus.TabIndex = 25;
-            lblConnStatus.Text = "Unconnected";
+            lblConnStatus.Text = "Chưa kết nối đến server";
             // 
             // WhatEatTodayForm
             // 

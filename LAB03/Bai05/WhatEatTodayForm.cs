@@ -26,8 +26,6 @@ namespace Exercise.Bai06
 
             UpdateFormTitle();
             SetupControlsForMode();
-
-            LoadAllDishes();
         }
 
         protected override async void OnLoad(EventArgs e)
@@ -35,7 +33,7 @@ namespace Exercise.Bai06
             base.OnLoad(e);
             if (!isCommunityMode)
             {
-                await Task.Run(() => LoadAllDishes());
+                await LoadAllDishesAsync();
             }
         }
 
@@ -59,8 +57,8 @@ namespace Exercise.Bai06
 
                 txtServerIP.Text = "127.0.0.1";
                 txtPort.Text = "12000";
-                btnFind.Enabled = false;  
-                btnAdd.Enabled = true;    
+                btnFind.Enabled = false;
+                btnAdd.Enabled = true;
             }
             else
             {
@@ -76,11 +74,15 @@ namespace Exercise.Bai06
             }
         }
 
-        private void LoadAllDishes()
+        // ✅ FIXED: Async version không có cross-thread issue
+        private async Task LoadAllDishesAsync()
         {
             try
             {
-                DataTable dt = dataHelper.GetAllDishes();
+                // Lấy dữ liệu từ database trên thread phụ
+                DataTable dt = await Task.Run(() => dataHelper.GetAllDishes());
+
+                // Cập nhật UI trên UI thread
                 listView1.Items.Clear();
 
                 foreach (DataRow row in dt.Rows)
@@ -96,13 +98,14 @@ namespace Exercise.Bai06
                 MessageBox.Show("Lỗi tải danh sách: " + ex.Message, "Lỗi");
             }
         }
+
         private void DisconnectFromServer()
         {
             try
             {
                 if (netStream != null)
                 {
-                    SendRawMessage("EXIT"); 
+                    SendRawMessage("EXIT");
                     netStream.Close();
                 }
                 tcpClient?.Close();
@@ -118,12 +121,14 @@ namespace Exercise.Bai06
             }
         }
 
-        private async void btnAdd_Click(object sender, EventArgs e) 
+        // ✅ FIXED: Đọc giá trị UI TRƯỚC khi vào Task.Run()
+        private async void btnAdd_Click(object sender, EventArgs e)
         {
-
+            // ĐỌC TẤT CẢ GIÁ TRỊ TỪ UI TRƯỚC
             string userName = txtUser.Text.Trim();
             string dishName = txtDish.Text.Trim();
             string accessLevel = txtAccess.Text.Trim();
+            byte[]? imageToAdd = selectedImage;
 
             try
             {
@@ -135,9 +140,9 @@ namespace Exercise.Bai06
                         return;
                     }
 
-                    if (selectedImage != null)
+                    if (imageToAdd != null)
                     {
-                        string base64 = Convert.ToBase64String(selectedImage);
+                        string base64 = Convert.ToBase64String(imageToAdd);
                         string message = $"ADDIMG:{dishName}|{userName}|{base64}";
 
                         string response = await SendAndReceiveAsync(message);
@@ -152,22 +157,26 @@ namespace Exercise.Bai06
 
                     ClearInputs();
                 }
-                else 
+                else
                 {
+                    // Validate
+                    if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(dishName))
+                    {
+                        MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Cảnh báo");
+                        return;
+                    }
+
+                    // Chạy database operations trên thread phụ, KHÔNG truy cập UI
                     await Task.Run(() =>
                     {
-                        string userName = txtUser.Text.Trim();
-                        string dishName = txtDish.Text.Trim();
-                        string accessLevel = txtAccess.Text.Trim(); 
-
                         int idNCC = dataHelper.CreateUser(userName, accessLevel);
-
-                        dataHelper.AddDish(dishName, selectedImage, idNCC);
+                        dataHelper.AddDish(dishName, imageToAdd, idNCC);
                     });
 
                     MessageBox.Show("Đã thêm món ăn cá nhân thành công!", "Thành công");
 
-                    await Task.Run(() => LoadAllDishes());
+                    // Load lại danh sách
+                    await LoadAllDishesAsync();
 
                     ClearInputs();
                 }
@@ -195,11 +204,10 @@ namespace Exercise.Bai06
                     if (response == "Danh sách trống" || string.IsNullOrWhiteSpace(response))
                     {
                         MessageBox.Show("Danh sách cộng đồng chưa có món ăn nào!", "Thông báo");
-                        ClearResultDisplay(); 
+                        ClearResultDisplay();
                     }
                     else
                     {
-
                         string[] parts = response.Split('|');
 
                         if (parts.Length >= 2)
@@ -212,7 +220,6 @@ namespace Exercise.Bai06
 
                             if (!string.IsNullOrEmpty(base64))
                             {
-
                                 imgData = Convert.FromBase64String(base64);
                             }
 
@@ -224,7 +231,6 @@ namespace Exercise.Bai06
                             };
 
                             DisplayDish(communityDish);
-
                         }
                         else
                         {
@@ -246,7 +252,6 @@ namespace Exercise.Bai06
                         ClearResultDisplay();
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -274,7 +279,6 @@ namespace Exercise.Bai06
                 try
                 {
                     var reader = new StreamReader(netStream, Encoding.UTF8, true, 4096, true);
-
                     return reader.ReadLine() ?? string.Empty;
                 }
                 catch (Exception ex)
@@ -288,7 +292,6 @@ namespace Exercise.Bai06
 
         private void SendRawMessage(string message)
         {
-
             if (netStream == null) return;
             byte[] data = Encoding.UTF8.GetBytes(message + "\n");
             netStream.Write(data, 0, data.Length);
@@ -322,6 +325,7 @@ namespace Exercise.Bai06
             {
                 return;
             }
+
             string response = await SendAndReceiveAsync("GET_ALL_FOODS");
 
             if (response == "EMPTY" || string.IsNullOrWhiteSpace(response))
@@ -364,7 +368,7 @@ namespace Exercise.Bai06
                     {
                         MessageBox.Show("Kích thước file ảnh quá lớn (> 200KB). Vui lòng chọn ảnh nhỏ hơn.",
                                         "Cảnh báo Kích thước", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        selectedImage = null; 
+                        selectedImage = null;
                         return;
                     }
 
@@ -381,7 +385,8 @@ namespace Exercise.Bai06
             }
         }
 
-        private async void btnDel_Click(object sender, EventArgs e) 
+        // ✅ FIXED: Gọi LoadAllDishesAsync() thay vì LoadAllDishes()
+        private async void btnDel_Click(object sender, EventArgs e)
         {
             if (listView1.SelectedItems.Count == 0)
             {
@@ -407,7 +412,7 @@ namespace Exercise.Bai06
                 if (success)
                 {
                     MessageBox.Show("Xóa thành công!", "Thành công");
-                    await Task.Run(() => LoadAllDishes());
+                    await LoadAllDishesAsync();
                 }
                 else
                 {
@@ -418,14 +423,15 @@ namespace Exercise.Bai06
 
         private async void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listView1.SelectedItems.Count == 0) return; 
+            if (listView1.SelectedItems.Count == 0) return;
 
             if (isCommunityMode)
             {
                 return;
             }
+
             int id = int.Parse(listView1.SelectedItems[0].Text);
-            DishInfo? dish = await Task.Run(() => dataHelper.GetDishById(id)); 
+            DishInfo? dish = await Task.Run(() => dataHelper.GetDishById(id));
 
             if (dish != null)
             {
@@ -445,6 +451,7 @@ namespace Exercise.Bai06
             txtDish.Clear();
             selectedImage = null;
         }
+
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             try
@@ -461,7 +468,7 @@ namespace Exercise.Bai06
 
             if (tcpClient != null && tcpClient.Connected)
             {
-                DisconnectFromServer(); 
+                DisconnectFromServer();
                 return;
             }
 
@@ -493,6 +500,10 @@ namespace Exercise.Bai06
                 btnFind.Enabled = true;
                 lblConnStatus.Text = $"Đã kết nối tới {ip}:{port}";
                 btnConnect.Text = "Disconnect";
+
+                // Load danh sách món ăn cộng đồng sau khi kết nối
+                await LoadCommunityDishes();
+
                 MessageBox.Show("Đã kết nối tới Server.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (TimeoutException)
@@ -509,6 +520,11 @@ namespace Exercise.Bai06
                 lblConnStatus.Text = "Không thể kết nối";
                 MessageBox.Show("Lỗi khi kết nối: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void txtDish_TextChanged(object sender, EventArgs e)
+        {
+            // Empty event handler
         }
     }
 }

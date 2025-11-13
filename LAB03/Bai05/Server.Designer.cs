@@ -36,18 +36,18 @@
             // btnListen
             // 
             btnListen.Font = new Font("Tahoma", 10.2F);
-            btnListen.Location = new Point(161, 29);
+            btnListen.Location = new Point(114, 28);
             btnListen.Name = "btnListen";
-            btnListen.Size = new Size(94, 29);
+            btnListen.Size = new Size(183, 29);
             btnListen.TabIndex = 5;
-            btnListen.Text = "Listen";
+            btnListen.Text = "Lắng nghe";
             btnListen.UseVisualStyleBackColor = true;
             btnListen.Click += btnListen_Click_1;
             // 
             // lblStatus
             // 
             lblStatus.Font = new Font("Tahoma", 10.2F);
-            lblStatus.Location = new Point(36, 71);
+            lblStatus.Location = new Point(36, 73);
             lblStatus.Name = "lblStatus";
             lblStatus.Size = new Size(359, 30);
             lblStatus.TabIndex = 6;
@@ -58,16 +58,16 @@
             lstLog.Font = new Font("Tahoma", 10.2F);
             lstLog.FormattingEnabled = true;
             lstLog.ItemHeight = 21;
-            lstLog.Location = new Point(36, 114);
+            lstLog.Location = new Point(36, 116);
             lstLog.Name = "lstLog";
-            lstLog.Size = new Size(359, 88);
+            lstLog.Size = new Size(359, 487);
             lstLog.TabIndex = 7;
             // 
             // Server
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(430, 242);
+            ClientSize = new Size(430, 630);
             Controls.Add(lstLog);
             Controls.Add(lblStatus);
             Controls.Add(btnListen);
