@@ -70,16 +70,30 @@ namespace Bai06.TCPSocket
             }
         }
 
-        public void Send(string message)
+        public bool Send(string message)
         {
-            if (_stream == null) return;
-            byte[] data = Encoding.UTF8.GetBytes(message);
-            _stream.Write(data, 0, data.Length);
+            if (_client == null || !_client.Connected || _stream == null)
+            {
+                MessageBox.Show("Lỗi kết nối Server!", "Lỗi");
+                return false;
+            }
+
+            try
+            {
+                byte[] data = Encoding.UTF8.GetBytes(message);
+                _stream.Write(data, 0, data.Length);
+                return true;
+            }
+            catch
+            {
+                MessageBox.Show("Lỗi kết nối Server!", "Lỗi");
+                return false;
+            }
         }
 
-        public void SendChat(string name, string message)
+        public bool SendChat(string name, string message)
         {
-            Send($"[MSG]|{name}|{message}");
+            return Send($"[MSG]|{name}|{message}");
         }
 
         public void Disconnect()
@@ -166,7 +180,20 @@ namespace Bai06.TCPSocket
             Send($"[PRIVATE_MSG]|{roomId}|{from}|{msg}");
         }
 
+        public bool IsDisconnected()
+        {
+            try
+            {
+                if (_client == null || !_client.Connected)
+                    return true;
 
+                return _client.Client.Poll(0, SelectMode.SelectRead) && _client.Available == 0;
+            }
+            catch
+            {
+                return true;
+            }
+        }
 
     }
 }

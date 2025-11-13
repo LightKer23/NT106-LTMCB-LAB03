@@ -169,7 +169,18 @@ namespace Bai06.TCPSocket
             }
             catch
             {
-                OnServerLog?.Invoke($"[LEAVE]|{remote.Address}:{remote.Port}");
+                string name = "";
+                lock (_userNames)
+                {
+                    if (_userNames.ContainsKey(client))
+                    {
+                        name = _userNames[client];
+                        _userNames.Remove(client);
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(name))
+                    OnLeave?.Invoke(name);
             }
             finally
             {
@@ -217,8 +228,23 @@ namespace Bai06.TCPSocket
         public void Stop()
         {
             _running = false;
-            _listener.Stop();
-            Log("Server stopped.");
+
+            try { _listener?.Stop(); } catch { }
+
+            lock (_clients)
+            {
+                foreach (var c in _clients)
+                {
+                    try { c.GetStream().Close(); } catch { }
+                    try { c.Close(); } catch { }
+                }
+                _clients.Clear();
+            }
+
+            lock (_userNames)
+            {
+                _userNames.Clear();
+            }
         }
 
         private void SendToClient(TcpClient client, string message)
