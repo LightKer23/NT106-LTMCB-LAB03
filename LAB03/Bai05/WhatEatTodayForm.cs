@@ -74,15 +74,12 @@ namespace Exercise.Bai06
             }
         }
 
-        // ✅ FIXED: Async version không có cross-thread issue
         private async Task LoadAllDishesAsync()
         {
             try
             {
-                // Lấy dữ liệu từ database trên thread phụ
                 DataTable dt = await Task.Run(() => dataHelper.GetAllDishes());
 
-                // Cập nhật UI trên UI thread
                 listView1.Items.Clear();
 
                 foreach (DataRow row in dt.Rows)
@@ -96,6 +93,29 @@ namespace Exercise.Bai06
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi tải danh sách: " + ex.Message, "Lỗi");
+            }
+        }
+
+        private bool IsConnected()
+        {
+            try
+            {
+                if (tcpClient == null) return false;
+                if (!tcpClient.Connected) return false;
+
+                if (tcpClient.Client.Poll(0, SelectMode.SelectRead))
+                {
+                    byte[] buff = new byte[1];
+                    if (tcpClient.Client.Receive(buff, SocketFlags.Peek) == 0)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 
@@ -121,10 +141,8 @@ namespace Exercise.Bai06
             }
         }
 
-        // ✅ FIXED: Đọc giá trị UI TRƯỚC khi vào Task.Run()
         private async void btnAdd_Click(object sender, EventArgs e)
         {
-            // ĐỌC TẤT CẢ GIÁ TRỊ TỪ UI TRƯỚC
             string userName = txtUser.Text.Trim();
             string dishName = txtDish.Text.Trim();
             string accessLevel = txtAccess.Text.Trim();
@@ -134,9 +152,11 @@ namespace Exercise.Bai06
             {
                 if (isCommunityMode)
                 {
-                    if (tcpClient == null || !tcpClient.Connected || netStream == null)
+                    if (!IsConnected())
                     {
-                        MessageBox.Show("Bạn phải bấm Connect tới Server trước khi thêm món cộng đồng.", "Thông báo");
+                        MessageBox.Show("Mất kết nối tới Server. Vui lòng kết nối lại.",
+                            "Lỗi Kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        DisconnectFromServer();
                         return;
                     }
 
@@ -147,7 +167,7 @@ namespace Exercise.Bai06
 
                         string response = await SendAndReceiveAsync(message);
 
-                        MessageBox.Show("Server: " + response, "Info");
+                        MessageBox.Show("Server: " + response, "Thông báo");
                         await LoadCommunityDishes();
                     }
                     else
@@ -159,14 +179,13 @@ namespace Exercise.Bai06
                 }
                 else
                 {
-                    // Validate
+
                     if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(dishName))
                     {
                         MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Cảnh báo");
                         return;
                     }
 
-                    // Chạy database operations trên thread phụ, KHÔNG truy cập UI
                     await Task.Run(() =>
                     {
                         int idNCC = dataHelper.CreateUser(userName, accessLevel);
@@ -175,11 +194,14 @@ namespace Exercise.Bai06
 
                     MessageBox.Show("Đã thêm món ăn cá nhân thành công!", "Thành công");
 
-                    // Load lại danh sách
                     await LoadAllDishesAsync();
 
                     ClearInputs();
                 }
+            }
+            catch (TimeoutException)
+            {
+                MessageBox.Show("Server không phản hồi. Kết nối đã bị ngắt.", "Lỗi");
             }
             catch (Exception ex)
             {
@@ -193,9 +215,12 @@ namespace Exercise.Bai06
             {
                 if (isCommunityMode)
                 {
-                    if (tcpClient == null || !tcpClient.Connected || netStream == null)
+
+                    if (!IsConnected())
                     {
-                        MessageBox.Show("Vui lòng Connect tới Server trước khi tìm món cộng đồng.", "Thông báo");
+                        MessageBox.Show("Mất kết nối tới Server. Vui lòng kết nối lại.",
+                            "Lỗi Kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        DisconnectFromServer();
                         return;
                     }
 
@@ -253,6 +278,10 @@ namespace Exercise.Bai06
                     }
                 }
             }
+            catch (TimeoutException)
+            {
+                MessageBox.Show("Server không phản hồi. Kết nối đã bị ngắt.", "Lỗi");
+            }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi: " + ex.Message, "Lỗi");
@@ -270,24 +299,50 @@ namespace Exercise.Bai06
         {
             if (netStream == null) throw new InvalidOperationException("Not connected");
 
-            byte[] data = Encoding.UTF8.GetBytes(message + "\n");
-            await netStream.WriteAsync(data, 0, data.Length);
-            await netStream.FlushAsync();
-
-            string response = await Task.Run(() =>
+            try
             {
-                try
-                {
-                    var reader = new StreamReader(netStream, Encoding.UTF8, true, 4096, true);
-                    return reader.ReadLine() ?? string.Empty;
-                }
-                catch (Exception ex)
-                {
-                    return "LỖI KHI NHẬN: " + ex.Message;
-                }
-            });
+                byte[] data = Encoding.UTF8.GetBytes(message + "\n");
+                await netStream.WriteAsync(data, 0, data.Length);
+                await netStream.FlushAsync();
 
-            return response.Trim();
+                using (var cts = new CancellationTokenSource(15000))
+                {
+                    var readTask = Task.Run(() =>
+                    {
+                        try
+                        {
+                            var reader = new StreamReader(netStream, Encoding.UTF8, true, 4096, true);
+                            return reader.ReadLine() ?? string.Empty;
+                        }
+                        catch (Exception ex)
+                        {
+                            return "LỖI KHI NHẬN: " + ex.Message;
+                        }
+                    });
+
+                    var timeoutTask = Task.Delay(Timeout.Infinite, cts.Token);
+                    var completedTask = await Task.WhenAny(readTask, timeoutTask);
+
+                    if (completedTask == timeoutTask)
+                    {
+                        throw new TimeoutException("Server không phản hồi trong 15 giây");
+                    }
+
+                    return ((Task<string>)completedTask).Result.Trim();
+                }
+            }
+            catch (TimeoutException)
+            {
+
+                DisconnectFromServer();
+                throw;
+            }
+            catch (IOException)
+            {
+
+                DisconnectFromServer();
+                throw new InvalidOperationException("Mất kết nối tới Server");
+            }
         }
 
         private void SendRawMessage(string message)
@@ -384,8 +439,6 @@ namespace Exercise.Bai06
                 }
             }
         }
-
-        // ✅ FIXED: Gọi LoadAllDishesAsync() thay vì LoadAllDishes()
         private async void btnDel_Click(object sender, EventArgs e)
         {
             if (listView1.SelectedItems.Count == 0)
@@ -461,7 +514,6 @@ namespace Exercise.Bai06
             catch { }
             base.OnFormClosing(e);
         }
-
         private async void btnConnect_Click_1(object sender, EventArgs e)
         {
             if (!isCommunityMode) return;
@@ -484,7 +536,7 @@ namespace Exercise.Bai06
                 tcpClient = new TcpClient();
                 lblConnStatus.Text = "Đang kết nối...";
 
-                using (var cts = new CancellationTokenSource(3000))
+                using (var cts = new CancellationTokenSource(10000))
                 {
                     var connectTask = tcpClient.ConnectAsync(ip, port);
                     var timeoutTask = Task.Delay(Timeout.Infinite, cts.Token);
@@ -492,7 +544,7 @@ namespace Exercise.Bai06
 
                     if (completedTask == timeoutTask)
                     {
-                        throw new TimeoutException("Kết nối quá thời gian quy định (3 giây).");
+                        throw new TimeoutException("Kết nối quá thời gian quy định (10 giây).");
                     }
                 }
 
@@ -501,30 +553,36 @@ namespace Exercise.Bai06
                 lblConnStatus.Text = $"Đã kết nối tới {ip}:{port}";
                 btnConnect.Text = "Disconnect";
 
-                // Load danh sách món ăn cộng đồng sau khi kết nối
                 await LoadCommunityDishes();
 
-                MessageBox.Show("Đã kết nối tới Server.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Đã kết nối tới Server thành công!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (TimeoutException)
             {
                 tcpClient?.Close();
                 tcpClient = null;
                 lblConnStatus.Text = "Không thể kết nối";
-                MessageBox.Show("Không thể kết nối tới Server do timeout. Hãy kiểm tra IP/Port và Server đang Listen.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    "Không thể kết nối tới Server do timeout.\n\n" +
+                    "Kiểm tra:\n" +
+                    "• Server đã bật và đang Listen?\n" +
+                    "• Địa chỉ IP và Port đúng?\n" +
+                    "• Firewall đã mở port 12000?",
+                    "Lỗi Kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
                 tcpClient = null;
                 netStream = null;
                 lblConnStatus.Text = "Không thể kết nối";
-                MessageBox.Show("Lỗi khi kết nối: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi khi kết nối: {ex.Message}", "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void txtDish_TextChanged(object sender, EventArgs e)
         {
-            // Empty event handler
         }
     }
 }
