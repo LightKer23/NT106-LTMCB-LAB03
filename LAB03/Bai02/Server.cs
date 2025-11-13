@@ -31,7 +31,7 @@ namespace Bai02
                 return;
             }
 
-            lblStatus.Text = "Listening on port 11000...";
+            lblStatus.Text = "Listening on port 8080...";
 
             Thread serverThread = new Thread(StartListening);
             serverThread.IsBackground = true;
@@ -52,7 +52,7 @@ namespace Bai02
                 );
 
                 // Port 8080 is commonly occupied by web servers
-                IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 11000);
+                IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 8080);
                 listener.Bind(ipep);
 
                 // -1 is deprecated, 10 is more explicit
