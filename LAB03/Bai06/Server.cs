@@ -51,14 +51,11 @@ namespace Bai06
 
                     _server.OnLeave += name =>
                     {
-                        _server.OnLeave += name =>
+                        this.Invoke(new Action(() =>
                         {
-                            this.Invoke(new Action(() =>
-                            {
-                                lstBoxDiaryLog.Items.Add($"{name} đã rời phòng");
-                                txtBoxConnects.Text = (--_SoLuong).ToString();
-                            }));
-                        };
+                            lstBoxDiaryLog.Items.Add($"{name} đã rời phòng");
+                            txtBoxConnects.Text = (--_SoLuong).ToString();
+                        }));
                     };
 
 

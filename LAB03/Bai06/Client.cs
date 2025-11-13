@@ -20,7 +20,16 @@ namespace Bai06
         public Client()
         {
             InitializeComponent();
+            btnOutRoom.Enabled = false;
             btnGui.Enabled = false;
+            txtMessage.Enabled = false;
+            //foreach(char m in txtMessage.Text)
+            //{
+            //    if(m != ' ')
+            //    {
+            //        btnGui.Enabled = true;
+            //    }
+            //}
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -28,18 +37,18 @@ namespace Bai06
             try
             {
                 btnConnect.Enabled = false;
+                btnOutRoom.Enabled = true;
+                btnGui.Enabled = true;
+                txtMessage.Enabled = true;
 
-                // Kiểm tra thông tin nhập vào
                 if (string.IsNullOrEmpty(txtHost.Text) || string.IsNullOrEmpty(txtPort.Text))
                 {
                     MessageBox.Show("Vui lòng nhập địa chỉ Host và Port.");
-                    btnConnect.Enabled = true;
                     return;
                 }
                 if (string.IsNullOrEmpty(textName.Text.Trim()))
                 {
                     MessageBox.Show("Vui lòng nhập tên người dùng.");
-                    btnConnect.Enabled = true;
                     return;
                 }
 
@@ -137,7 +146,14 @@ namespace Bai06
         private void button1_Click(object sender, EventArgs e)
         {
             _client?.Disconnect();
-            lstTroChuyen.Items.Add("Bạn đã rời khỏi phòng.");
+            lstTroChuyen.Items.Clear();
+            lstNguoiThamGia.Items.Clear();
+            btnConnect.Enabled = true;
+            btnGui.Enabled = false;
+            btnOutRoom.Enabled = false;
+            txtMessage.Enabled = false;
+
+
         }
 
 
@@ -163,13 +179,13 @@ namespace Bai06
 
         }
 
-        private void txtMessage_TextChanged(object sender, EventArgs e)
-        {
-            string msg = txtMessage.Text.Trim();
-            if (string.IsNullOrEmpty(msg))
-                btnGui.Enabled = false;
-            else
-                btnGui.Enabled = true;
-        }
+        //private void txtMessage_TextChanged(object sender, EventArgs e)
+        //{
+        //    string msg = txtMessage.Text.Trim();
+        //    if (string.IsNullOrEmpty(msg))
+        //        btnGui.Enabled = false;
+        //    else
+        //        btnGui.Enabled = true;
+        //}
     }
 }
