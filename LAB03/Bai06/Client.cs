@@ -155,13 +155,13 @@ namespace Bai06
             string msg = txtMessage.Text.Trim();
             if (string.IsNullOrEmpty(msg)) return;
 
-            if(_client.IsDisconnected() == true)
+            if (_client.IsDisconnected() == true)
             {
                 MessageBox.Show("Lỗi kết nối Server!", "Lỗi");
                 txtMessage.Clear();
                 return;
-            }  
-            
+            }
+
 
             if (_client.SendChat(_userName, msg))
             {
@@ -196,6 +196,11 @@ namespace Bai06
         private void txtMessage_Click(object sender, EventArgs e)
         {
             btnGui.Enabled = false;
+        }
+
+        private void Client_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _client?.Disconnect();
         }
     }
 }

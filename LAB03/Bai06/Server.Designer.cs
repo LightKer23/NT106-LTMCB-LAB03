@@ -185,6 +185,7 @@
             Controls.Add(grpBoxTCPServer);
             Name = "Server";
             Text = "Server";
+            FormClosing += Server_FormClosing;
             grpBoxActivityLog.ResumeLayout(false);
             grpBoxTCPServer.ResumeLayout(false);
             grpBoxTCPServer.PerformLayout();

@@ -99,7 +99,7 @@ namespace Bai06
                 _server?.Stop();
                 txtBoxStatus.Text = "Đã dừng";
                 btnCloseConnect.Enabled = false;
-                txtBoxConnects.Text = ""+ _SoLuong;
+                txtBoxConnects.Text = "" + _SoLuong;
                 lstBoxDiaryLog.Items.Add("Server đã dừng.");
 
                 btnOpenConnect.Enabled = true;
@@ -137,6 +137,9 @@ namespace Bai06
             return "127.0.0.1";
         }
 
-
+        private void Server_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _server?.Stop();
+        }
     }
 }

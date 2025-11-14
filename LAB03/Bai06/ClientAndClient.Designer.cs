@@ -110,6 +110,7 @@
             Controls.Add(btnGuiRieng);
             Name = "ClientAndClient";
             Text = "ClientAndClient";
+            FormClosing += ClientAndClient_FormClosing;
             ResumeLayout(false);
             PerformLayout();
         }

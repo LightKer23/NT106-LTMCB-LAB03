@@ -267,6 +267,7 @@
             Controls.Add(grpBoxTCPServer);
             Name = "Client";
             Text = "Client";
+            FormClosing += Client_FormClosing;
             grpBoxTCPServer.ResumeLayout(false);
             grpBoxTCPServer.PerformLayout();
             groupBox1.ResumeLayout(false);

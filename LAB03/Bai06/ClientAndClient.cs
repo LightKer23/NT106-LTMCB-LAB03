@@ -78,5 +78,10 @@ namespace Bai06
         {
             btnGuiRieng.Enabled = false;
         }
+
+        private void ClientAndClient_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _client.SendPrivateMsg(_roomId, "Thông báo", $"{_userName} đã rời khỏi phòng!");
+        }
     }
-    }
+}
