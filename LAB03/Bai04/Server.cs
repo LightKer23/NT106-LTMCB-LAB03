@@ -91,7 +91,7 @@ namespace Bai04
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Lỗi đọc file: " + ex.Message);
+                        MessageBox.Show("Có lỗi xảy ra, không đọc được file ");
                     }
                 }
             }
@@ -156,7 +156,7 @@ namespace Bai04
 
             if (movies.Count == 0)
             {
-                MessageBox.Show("Vui lòng chọn file dữ liệu phim.");
+                MessageBox.Show("Vui lòng chọn file chứa dữ liệu phim.");
                 return;
             }
 

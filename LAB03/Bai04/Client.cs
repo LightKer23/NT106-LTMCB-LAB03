@@ -336,7 +336,6 @@ namespace Bai04
             catch (Exception ex)
             {
                 isConnected = false;
-                LoadButton.Enabled = false;
                 MovieComboBox.Enabled = false;
                 RoomComboBox.Enabled = false;
                 BookButton.Enabled = false;
