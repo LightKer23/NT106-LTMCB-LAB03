@@ -60,7 +60,7 @@
             StartButton.Name = "StartButton";
             StartButton.Size = new Size(126, 73);
             StartButton.TabIndex = 2;
-            StartButton.Text = "Bắt đầu";
+            StartButton.Text = "Bật server";
             StartButton.UseVisualStyleBackColor = true;
             StartButton.Click += btnStart_Click;
             // 
@@ -126,5 +126,6 @@
         private ProgressBar progressBar1;
         private ListBox lvLog;
         private Label lblStatus;
+        private ListBox Log;
     }
 }

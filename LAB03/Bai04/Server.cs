@@ -156,7 +156,7 @@ namespace Bai04
 
             if (movies.Count == 0)
             {
-                MessageBox.Show("Hãy Load input5.txt trước.");
+                MessageBox.Show("Vui lòng chọn file dữ liệu phim.");
                 return;
             }
 
@@ -169,12 +169,12 @@ namespace Bai04
                 acceptThread.Start();
 
                 AppendLog("Server đang lắng nghe tại port 9000...");
-                SetStatus("Listening (9000)");
-                StartButton.Text = "Stop Server";
+                SetStatus("Lắng nghe (9000)");
+                StartButton.Text = "Tắt Server";
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Không thể start server: " + ex.Message);
+                MessageBox.Show("Không thể khởi động server: " + ex.Message);
             }
         }
 
@@ -186,8 +186,8 @@ namespace Bai04
                 listener?.Stop();
                 acceptThread?.Join(300);
                 AppendLog("Server đã dừng.");
-                SetStatus("Stopped");
-                StartButton.Text = "Start Server (9000)";
+                SetStatus("Tắt server");
+                StartButton.Text = "Bật server (9000)";
             }
             catch { }
         }
@@ -207,7 +207,7 @@ namespace Bai04
                 }
                 catch (Exception ex)
                 {
-                    AppendLog("Accept error: " + ex.Message);
+                    AppendLog("Có lỗi xảy ra: " + ex.Message);
                 }
             }
         }
@@ -218,7 +218,7 @@ namespace Bai04
             var remote = tcp.Client.RemoteEndPoint?.ToString() ?? "client";
             AppendLog($"Kết nối mới: {remote}");
 
-            StreamWriter sw = null;   // ⭐ khai báo ngoài
+            StreamWriter sw = null; 
 
             try
             {
@@ -227,7 +227,7 @@ namespace Bai04
                 {
                     using (var swLocal = new StreamWriter(ns, new UTF8Encoding(false)) { AutoFlush = true })
                     {
-                        sw = swLocal; // lưu lại để remove khỏi list sau này
+                        sw = swLocal; 
 
                         swLocal.WriteLine("WELCOME");
 
@@ -274,7 +274,6 @@ namespace Bai04
             }
             catch (IOException)
             {
-                /* client đóng */
             }
             catch (Exception ex)
             {
@@ -282,7 +281,6 @@ namespace Bai04
             }
             finally
             {
-                // ⭐ luôn luôn remove khỏi danh sách khi client thoát
                 if (sw != null)
                 {
                     lock (clientStreams)
@@ -301,7 +299,7 @@ namespace Bai04
                 foreach (var w in clientStreams.ToList())
                 {
                     try { w.WriteLine(message); }
-                    catch { /* client có thể disconnect */ }
+                    catch {  }
                 }
             }
         }

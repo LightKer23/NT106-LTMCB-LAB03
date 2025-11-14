@@ -102,7 +102,7 @@ namespace Bai04
             Total.Text = "0";
             foreach (var btn in seatButtons)
             {
-                btn.Enabled = true;
+                btn.Enabled = false;
                 btn.BackColor = (Color)btn.Tag;
             }
 
@@ -127,7 +127,14 @@ namespace Bai04
         private async void RoomComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (RoomComboBox.SelectedItem == null || currentMovie == null)
+            {
+                foreach (var btn in seatButtons)
+                {
+                    btn.Enabled = false;
+                    btn.BackColor = (Color)btn.Tag;
+                }
                 return;
+            }
 
             currentRoom = (int)RoomComboBox.SelectedItem;
 
@@ -142,7 +149,7 @@ namespace Bai04
 
             if (currentMovie == null || currentRoom == 0)
             {
-                MessageBox.Show("Please select movie and room first.");
+                MessageBox.Show("Vui lòng chọn phim và phòng trước.");
                 return;
             }
 
@@ -169,22 +176,17 @@ namespace Bai04
 
         private async void BookButton_Click(object sender, EventArgs e)
         {
-            if (currentMovie == null || currentRoom == 0)
-            {
-                MessageBox.Show("Please select movie and room first.");
-                return;
-            }
-
+           
             if (selectedSeats.Count == 0)
             {
-                MessageBox.Show("Please select at least one seat.");
+                MessageBox.Show("Vui lòng chọn ít nhất một ghế.");
                 return;
             }
 
             string customer = CustomerNameBox.Text.Trim();
             if (string.IsNullOrEmpty(customer))
             {
-                MessageBox.Show("Please enter customer name.");
+                MessageBox.Show("Vui lòng nhập tên khách hàng.");
                 return;
             }
 
@@ -197,7 +199,7 @@ namespace Bai04
                 string resp = await RequestBookAsync(movieId, currentRoom, seatList, customer);
                 if (resp == null)
                 {
-                    MessageBox.Show("Server disconnected.");
+                    MessageBox.Show("Server đã ngắt kết nối.");
                     return;
                 }
 
@@ -207,12 +209,12 @@ namespace Bai04
                     int totalFromServer = int.Parse(p[1]);
 
                     MessageBox.Show(
-                        "Booking success!\n" +
-                        "Customer: " + customer + "\n" +
-                        "Movie: " + currentMovie.Name + "\n" +
-                        "Room: " + currentRoom + "\n" +
-                        "Seats: " + seatList + "\n" +
-                        "Total: " + totalFromServer);
+                        "Đặt vé thành công!\n" +
+                        "Khách hàng: " + customer + "\n" +
+                        "Phim: " + currentMovie.Name + "\n" +
+                        "Phòng số: " + currentRoom + "\n" +
+                        "Ghế: " + seatList + "\n" +
+                        "Tổng tiền: " + totalFromServer);
                     foreach (var seat in seatsJustBooked)
                     {
                         var btnSeat = seatButtons.FirstOrDefault(b =>
@@ -230,7 +232,7 @@ namespace Bai04
                 }
                 else if (p[0] == "BOOK_FAIL" && p.Length >= 2)
                 {
-                    MessageBox.Show("Booking failed: " + p[1]);
+                    MessageBox.Show("Đặt vé thất bại: " + p[1]);
                     selectedSeats.Clear();
                     Total.Text = "0";
 
@@ -238,12 +240,12 @@ namespace Bai04
                 }
                 else
                 {
-                    MessageBox.Show("Invalid response from server: " + resp);
+                    MessageBox.Show("Phản hồi không hợp lệ từ server: " + resp);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error when booking: " + ex.Message);
+                MessageBox.Show("Lỗi khi đặt vé: " + ex.Message);
             }
         }
 
@@ -630,7 +632,7 @@ namespace Bai04
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error when loading room state: " + ex.Message);
+                MessageBox.Show("Lỗi khi tải phòng: " + ex.Message);
             }
         }
 
