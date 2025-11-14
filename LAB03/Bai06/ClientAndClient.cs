@@ -76,7 +76,8 @@ namespace Bai06
 
         private void txtMessClient_Click(object sender, EventArgs e)
         {
-            btnGuiRieng.Enabled = false;
+            if (string.IsNullOrEmpty(txtMessClient.Text.Trim()))
+                btnGuiRieng.Enabled = false;
         }
 
         private void ClientAndClient_FormClosing(object sender, FormClosingEventArgs e)

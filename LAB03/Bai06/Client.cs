@@ -29,18 +29,26 @@ namespace Bai06
         {
             try
             {
-                btnConnect.Enabled = false;
                 btnOutRoom.Enabled = true;
                 btnGui.Enabled = true;
                 txtMessage.Enabled = true;
 
-                if (string.IsNullOrEmpty(txtHost.Text) || string.IsNullOrEmpty(txtPort.Text))
+                if (string.IsNullOrEmpty(txtHost.Text.Trim()))
                 {
-                    MessageBox.Show("Vui lòng nhập địa chỉ Host và Port.");
+                    btnConnect.Enabled = true;
+                    MessageBox.Show("Vui lòng nhập địa chỉ Server IP.");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(txtPort.Text.Trim()))
+                {
+                    btnConnect.Enabled = true;
+                    MessageBox.Show("Vui lòng nhập địa chỉ Port.");
                     return;
                 }
                 if (string.IsNullOrEmpty(textName.Text.Trim()))
                 {
+                    btnConnect.Enabled = true;
                     MessageBox.Show("Vui lòng nhập tên người dùng.");
                     return;
                 }
@@ -195,7 +203,8 @@ namespace Bai06
 
         private void txtMessage_Click(object sender, EventArgs e)
         {
-            btnGui.Enabled = false;
+            if (string.IsNullOrEmpty(txtMessage.Text.Trim()))
+                btnGui.Enabled = false;
         }
 
         private void Client_FormClosing(object sender, FormClosingEventArgs e)
