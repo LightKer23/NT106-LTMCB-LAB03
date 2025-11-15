@@ -37,7 +37,6 @@ namespace Bai04
         public Server()
         {
             InitializeComponent();
-            lblStatus.Text = "Idle";
         }
 
         private void AppendLog(string msg)
@@ -93,7 +92,7 @@ namespace Bai04
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Có lỗi xảy ra, không đọc được file " + ex.Message);
+                        MessageBox.Show("Có lỗi xảy ra, không đọc được file. " + ex.Message);
                     }
                 }
             }
