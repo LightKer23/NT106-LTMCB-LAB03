@@ -30,6 +30,15 @@ namespace Bai04
         private List<Button> seatButtons = new List<Button>();
         private HashSet<string> selectedSeats = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
+        private class CustomerInfo
+        {
+            public int TotalTickets = 0; 
+            public HashSet<(int movieId, int room)> Rooms = new HashSet<(int, int)>();
+        }
+
+        private readonly Dictionary<string, CustomerInfo> customerInfos =
+            new Dictionary<string, CustomerInfo>(StringComparer.OrdinalIgnoreCase);
+
         private readonly object _pendingLock = new object();
         private TaskCompletionSource<List<Movie>> _pendingMovies;
         private TaskCompletionSource<StateResult> _pendingState;
@@ -149,7 +158,7 @@ namespace Bai04
 
             if (currentMovie == null || currentRoom == 0)
             {
-                MessageBox.Show("Vui lòng chọn phim và phòng trước.");
+                MessageBox.Show("Vui lòng kết nối server và chọn phim,phòng.");
                 return;
             }
 
@@ -162,6 +171,7 @@ namespace Bai04
             }
             else
             {
+               
                 selectedSeats.Add(seatName);
                 btn.BackColor = Color.LightGreen;
             }
@@ -195,6 +205,52 @@ namespace Bai04
                 int movieId = currentMovie.Id;
                 var seatsJustBooked = selectedSeats.ToList();
                 string seatList = string.Join(",", selectedSeats);
+                int newSeatsCount = seatsJustBooked.Count;
+                if (!customerInfos.TryGetValue(customer, out CustomerInfo info))
+                {
+                    info = new CustomerInfo();
+                    customerInfos[customer] = info;
+                }
+
+                int oldTotal = info.TotalTickets;
+                int oldRoomCount = info.Rooms.Count;
+                bool hasThisRoom = info.Rooms.Contains((movieId, currentRoom));
+
+                int newTotal = oldTotal + newSeatsCount;
+                int newRoomCount = oldRoomCount + (hasThisRoom ? 0 : 1);
+                bool aboutToLockToOneRoom = false;
+
+                if (oldTotal == 0 && newRoomCount == 1 && newTotal >= 2)
+                    aboutToLockToOneRoom = true;
+
+                if (oldTotal == 1 && oldRoomCount == 1 && hasThisRoom && newRoomCount == 1)
+                    aboutToLockToOneRoom = true;
+
+                if (aboutToLockToOneRoom)
+                {
+                    var ans = MessageBox.Show(
+                        "Lưu ý: Nếu bạn mua từ 2 vé trở lên nhưng CHỈ trong MỘT phòng chiếu,\n" +
+                        "thì sau này bạn sẽ KHÔNG thể mua thêm vé ở phòng chiếu khác.\n\n" +
+                        "Bạn có chắc chắn vẫn muốn tiếp tục không?",
+                        "Xác nhận mua nhiều vé trong một phòng",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning);
+
+                    if (ans == DialogResult.No)
+                    {
+                        return;
+                    }
+                }
+
+                if (newRoomCount >= 2 && newTotal > 2)
+                {
+                    MessageBox.Show(
+                        "Không thể chọn hơn 2 vé ở 2 phòng chiếu khác nhau.",
+                        "Thông báo",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                    return;
+                }
 
                 string resp = await RequestBookAsync(movieId, currentRoom, seatList, customer);
                 if (resp == null)
@@ -208,6 +264,9 @@ namespace Bai04
                 {
                     int totalFromServer = int.Parse(p[1]);
 
+                    info.TotalTickets += seatsJustBooked.Count;
+                    info.Rooms.Add((movieId, currentRoom));
+
                     MessageBox.Show(
                         "Đặt vé thành công!\n" +
                         "Khách hàng: " + customer + "\n" +
@@ -215,6 +274,7 @@ namespace Bai04
                         "Phòng số: " + currentRoom + "\n" +
                         "Ghế: " + seatList + "\n" +
                         "Tổng tiền: " + totalFromServer);
+
                     foreach (var seat in seatsJustBooked)
                     {
                         var btnSeat = seatButtons.FirstOrDefault(b =>
@@ -245,10 +305,10 @@ namespace Bai04
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi khi đặt vé: " + ex.Message);
+                MessageBox.Show("Lỗi khi đặt vé:");
             }
         }
-
+        
         private int CalculateSeatPrice(string seat)
         {
             seat = seat.ToUpper();
@@ -328,7 +388,7 @@ namespace Bai04
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi khi tải phim sau khi kết nối: " + ex.Message);
+                    MessageBox.Show("Lỗi khi tải phim sau khi kết nối:" );
                 }
 
                 MessageBox.Show("Kết nối server thành công!");
@@ -340,7 +400,7 @@ namespace Bai04
                 RoomComboBox.Enabled = false;
                 BookButton.Enabled = false;
 
-                MessageBox.Show("Không kết nối được server: " + ex.Message);
+                MessageBox.Show("Không kết nối được server:" );
 
                 if (tcpClient != null)
                 {
@@ -356,33 +416,40 @@ namespace Bai04
 
         private Task<List<Movie>> RequestMoviesAsync()
         {
+            TaskCompletionSource<List<Movie>> tcs;
             lock (_pendingLock)
             {
-                _pendingMovies = new TaskCompletionSource<List<Movie>>();
+                tcs = new TaskCompletionSource<List<Movie>>();
+                _pendingMovies = tcs;
             }
             swriter.WriteLine("GET_MOVIES");
-            return _pendingMovies.Task;
+            return tcs.Task;
         }
 
         private Task<StateResult> RequestStateAsync(int movieId, int room)
         {
+            TaskCompletionSource<StateResult> tcs;
             lock (_pendingLock)
             {
-                _pendingState = new TaskCompletionSource<StateResult>();
+                tcs = new TaskCompletionSource<StateResult>();
+                _pendingState = tcs;
             }
             swriter.WriteLine($"GET_STATE|{movieId}|{room}");
-            return _pendingState.Task;
+            return tcs.Task;
         }
 
         private Task<string> RequestBookAsync(int movieId, int room, string seatsCsv, string customer)
         {
+            TaskCompletionSource<string> tcs;
             lock (_pendingLock)
             {
-                _pendingBook = new TaskCompletionSource<string>();
+                tcs = new TaskCompletionSource<string>();
+                _pendingBook = tcs;
             }
             swriter.WriteLine($"BOOK|{movieId}|{room}|{seatsCsv}|{customer}");
-            return _pendingBook.Task;
+            return tcs.Task;
         }
+
         private void ListenFromServer()
         {
             try

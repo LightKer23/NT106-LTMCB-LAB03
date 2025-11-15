@@ -13,7 +13,6 @@ namespace Bai04
 {
     public partial class Server : Form
     {
-        // ==== Model duy nhất ====
         private class Movie
         {
             public int Id;
@@ -23,6 +22,9 @@ namespace Bai04
         }
         private readonly List<StreamWriter> clientStreams = new List<StreamWriter>();
 
+        private readonly Dictionary<string, int> customerTickets =new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+        private readonly Dictionary<string, HashSet<(int movieId, int room)>> customerRooms =new Dictionary<string, HashSet<(int, int)>>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<int, Movie> movies = new Dictionary<int, Movie>();
         private readonly Dictionary<(int movieId, int room), HashSet<string>> sold = new Dictionary<(int, int), HashSet<string>>();
         private readonly Dictionary<int, int> revenue = new Dictionary<int, int>();
@@ -74,7 +76,7 @@ namespace Bai04
         {
             using (var ofd = new OpenFileDialog
             {
-                Title = "Chọn input5.txt",
+                Title = "Chọn file chứa dữ liệu phim phòng",
                 Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*",
                 InitialDirectory = Application.StartupPath,
                 Multiselect = false,
@@ -91,7 +93,7 @@ namespace Bai04
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Có lỗi xảy ra, không đọc được file ");
+                        MessageBox.Show("Có lỗi xảy ra, không đọc được file " + ex.Message);
                     }
                 }
             }
@@ -100,52 +102,86 @@ namespace Bai04
         private void LoadMoviesFromFile(string path)
         {
             var lines = File.ReadAllLines(path, Encoding.UTF8)
-                .Select(l => l.Trim())
-                .Where(l => !string.IsNullOrWhiteSpace(l))
-                .ToList();
+                            .Select(l => l.Trim())
+                            .Where(l => !string.IsNullOrWhiteSpace(l))
+                            .ToList();
+
+            if (lines.Count % 3 != 0)
+            {
+                throw new Exception(
+                    "File dữ liệu không đúng định dạng.\n" +
+                    "Mỗi phim phải gồm đúng 3 dòng: TÊN PHIM, GIÁ VÉ CHUẨN, DANH SÁCH PHÒNG.");
+            }
 
             lock (_lock)
             {
                 movies.Clear();
                 sold.Clear();
                 revenue.Clear();
+                customerTickets.Clear();
+                customerRooms.Clear();
 
-                int idx = 0, id = 1;
-                while (idx + 2 < lines.Count)
+                int lineIndex = 0;
+                int id = 1;
+
+                while (lineIndex < lines.Count)
                 {
-                    string name = lines[idx++];
-                    if (!int.TryParse(lines[idx++], out int basePrice))
-                        throw new Exception($"Giá vé chuẩn không hợp lệ cho phim: {name}");
+                    string name = lines[lineIndex++];
+                    if (string.IsNullOrWhiteSpace(name))
+                    {
+                        throw new Exception($"Tên phim trống tại block phim ID={id} (nhóm 3 dòng thứ {((id - 1) * 3 + 1)}).");
+                    }
+                    string priceLine = lines[lineIndex++];
+                    if (!int.TryParse(priceLine, out int basePrice) || basePrice <= 0)
+                    {
+                        throw new Exception(
+                            $"Giá vé chuẩn không hợp lệ cho phim \"{name}\" (ID={id}).\n" +
+                            $" Giá phải là số nguyên dương.: \"{priceLine}\"");
+                    }
+                    string roomLine = lines[lineIndex++];
+                    var roomTokens = roomLine.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    var roomTokens = lines[idx++].Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     var roomList = new List<int>();
                     foreach (var tk in roomTokens)
-                        if (int.TryParse(tk, out int r) && r >= 1 && r <= 3)
+                    {
+                        if (!int.TryParse(tk, out int r) || r < 1 || r > 3)
+                        {
+                            throw new Exception(
+                                $"Không được dùng phòng chiếu \"{tk}\" cho phim \"{name}\" (ID={id}).\n" +
+                                "Chỉ được phép sử dụng các phòng 1, 2 hoặc 3.");
+                        }
+
+                        if (!roomList.Contains(r))
                             roomList.Add(r);
+                    }
 
                     if (roomList.Count == 0)
-                        throw new Exception($"Phòng chiếu trống/không hợp lệ cho phim: {name}");
+                    {
+                        throw new Exception($"Phim \"{name}\" (ID={id}) không có phòng chiếu hợp lệ.");
+                    }
 
                     var m = new Movie
                     {
                         Id = id,
                         Name = name,
                         BasePrice = basePrice,
-                        Rooms = roomList.Distinct().OrderBy(x => x).ToList()
+                        Rooms = roomList.OrderBy(x => x).ToList()
                     };
 
                     movies[id] = m;
                     revenue[id] = 0;
 
                     foreach (int r in m.Rooms)
+                    {
                         sold[(id, r)] = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                    }
 
                     id++;
                 }
             }
         }
 
-        // ==== Server (TCP) ====
+
         private void btnStart_Click(object sender, EventArgs e)
         {
             if (running)
@@ -345,6 +381,8 @@ namespace Bai04
                 return;
             }
 
+            customer = customer.Trim();
+
             var seats = seatsCsv.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => s.Trim().ToUpperInvariant())
                 .Distinct()
@@ -385,16 +423,43 @@ namespace Bai04
                     }
                 }
 
-                int total = seats.Sum(s => CalculateSeatPrice(movies[movieId].BasePrice, s));
-                foreach (var s in seats) hs.Add(s);
+                if (!customerTickets.TryGetValue(customer, out int oldTotal))
+                    oldTotal = 0;
 
-                revenue[movieId] = (revenue.TryGetValue(movieId, out int old) ? old : 0) + total;
+                if (!customerRooms.TryGetValue(customer, out var roomSet))
+                {
+                    roomSet = new HashSet<(int, int)>();
+                    customerRooms[customer] = roomSet;
+                }
+
+                bool hasThisRoom = roomSet.Contains((movieId, room));
+                int newTotal = oldTotal + seats.Count;
+                int newRoomCount = roomSet.Count + (hasThisRoom ? 0 : 1);
+
+               
+                if (newRoomCount >= 2 && newTotal > 2)
+                {
+                    sw.WriteLine("BOOK_FAIL|Không thể chọn hơn 2 vé ở 2 phòng chiếu khác nhau.");
+                    return;
+                }
+
+                int total = seats.Sum(s => CalculateSeatPrice(movies[movieId].BasePrice, s));
+                foreach (var s in seats)
+                    hs.Add(s);
+
+                revenue[movieId] = (revenue.TryGetValue(movieId, out int oldRev) ? oldRev : 0) + total;
+
+                roomSet.Add((movieId, room));
+                customerTickets[customer] = newTotal;
+
                 sw.WriteLine($"BOOK_OK|{total}");
                 AppendLog($"BOOK_OK {customer} | {movies[movieId].Name} - P{room} | {string.Join(",", seats)} | {total:N0}");
+
                 string state = string.Join(",", hs.OrderBy(x => x));
                 Broadcast($"UPDATE_STATE|{movieId}|{room}|{state}");
             }
         }
+
 
         private static bool IsValidSeatName(string s)
         {
