@@ -229,8 +229,7 @@ namespace Bai04
                 if (aboutToLockToOneRoom)
                 {
                     var ans = MessageBox.Show(
-                        "Lưu ý: Nếu bạn mua từ 2 vé trở lên nhưng CHỈ trong MỘT phòng chiếu,\n" +
-                        "thì sau này bạn sẽ KHÔNG thể mua thêm vé ở phòng chiếu khác.\n\n" +
+                        "Lưu ý: Nếu bạn mua từ 2 vé trở lên nhưng CHỈ trong MỘT phòng chiếu, thì sau này bạn sẽ KHÔNG thể mua thêm vé ở phòng chiếu khác.\n\n" +
                         "Bạn có chắc chắn vẫn muốn tiếp tục không?",
                         "Xác nhận mua nhiều vé trong một phòng",
                         MessageBoxButtons.YesNo,
